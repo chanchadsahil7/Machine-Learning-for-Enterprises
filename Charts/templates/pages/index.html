@@ -1,5 +1,7 @@
-<!doctype html> {% load static %}
-<html lang="en" class="no-js">
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,8 +21,9 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     </head>
+
     <body>
-    <div id="wrapper">
+        <div id="wrapper">
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -74,56 +77,13 @@
                 </div>
             </div>
         </nav>
-
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Tables</h1>
+                    <h1 class="page-header">Dashboard</h1>
                 </div>
-                <!-- /.col-lg-12 -->
             </div>
-            <!-- /.row -->
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            DataTables Advanced Tables
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="well">
-                            <select class="company" id="company">
-                            {% for key,values in companies.items %}
-                                <option id="company_id_{{forloop.counter}}" class="{{ key }}" href="#">{{ values.0 }}</option>
-                            {% endfor %}
-                            </select>
-                        </div>
-                        <div class="panel-body" id="data">
-                            <script>
-                                google.charts.load('current', {'packages':['table']});
-                                google.charts.setOnLoadCallback(drawTable);
-                                function drawTable()
-                                {
-
-                                    $.getJSON('/plots/superadmin_data/', {'company': $('#company').val() }, function(json){
-
-                                        var data = new google.visualization.DataTable();
-                //                                data.addColumn('string', 'Name');      name
-                                            data.addColumn('string', 'Email');
-                                            data.addColumn('string', 'Company');
-                                            data.addRows(json['data']);
-                                            var table = new google.visualization.Table(document.getElementById('data'));
-                                            table.draw(data, {showRowNumber: true, width: '50%', height: '100%'});
-                                        });
-
-                                        var options = {'allowHtml':True,
-                                                        }
-                                }
-                            </script>
-
-
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -136,11 +96,6 @@
     <script src="{% static 'vendor/datatables-responsive/dataTables.responsive.js'%}"></script>
     <script src="{% static 'dist/js/sb-admin-2.js'%}"></script>
 
-    <script>
-        $("#company").change(function() {
-            drawTable();
-        });
-    </script>
     </body>
 
 </html>
