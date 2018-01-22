@@ -1,0 +1,134 @@
+<!doctype html> {% load static %}
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
+
+        <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+        <!-- CSS reset -->
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <!-- Resource style -->
+        <script src="{% static 'js/modernizr.js' %}"></script>
+        <!-- Modernizr -->
+        <script src="{% static 'js/jquery-2.1.4.js'%}"></script>
+        <script src="{% static 'js/jquery.menu-aim.js' %}"></script>
+        <script src="{% static 'js/main.js'}"></script>
+        <!-- Resource jQuery -->
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <title>Superadmin Page</title>
+        <header class="cd-main-header">
+            <img src="{% static 'images/mlcharts_logo.png' %}" style="width:90px;height:50px;margin-top:5px;margin-left:50px">
+
+            <a href="#0" class="cd-nav-trigger">Menu<span></span></a>
+
+            <nav class="cd-nav">
+                <ul class="cd-top-nav">
+                    <li class="has-children account">
+                        <a href="#0">
+                            <img src="img/cd-avatar.png" alt="avatar">
+                            Account
+                        </a>
+                        <ul>
+                            <li><a href="#0">My Account</a></li>
+                            <li><a href="#0">Edit Account</a></li>
+                            <li><a href="#0">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <main class="cd-main-content">
+            <nav class="cd-side-nav">
+                <ul>
+                    <li class="cd-label">Main</li>
+                    <li class="dashboard">
+                        <a href="#0">Dashboard</a>           
+                    </li>
+                    <li class="has-children Company">
+                        <a href="#0">Company</a>
+                    </li>
+
+                    <li class="has-children comments">
+                        <a href="#0">Comments</a>
+                        <ul>
+                            <li><a href="#0">All Comments</a></li>
+                            <li><a href="#0">Edit Comment</a></li>
+                            <li><a href="#0">Delete Comment</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="cd-label">Secondary</li>
+                    <li class="has-children bookmarks">
+                        <a href="#0">Bookmarks</a>
+                        <ul>
+                            <li><a href="#0">All Bookmarks</a></li>
+                            <li><a href="#0">Edit Bookmark</a></li>
+                            <li><a href="#0">Import Bookmark</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-children images">
+                        <a href="#0">Images</a>
+                        <ul>
+                            <li><a href="#0">All Images</a></li>
+                            <li><a href="#0">Edit Image</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-children users">
+                        <a href="#0">Users</a>
+                        <ul>
+                            <li><a href="#0">All Users</a></li>
+                            <li><a href="#0">Edit User</a></li>
+                            <li><a href="#0">Add User</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul>
+                    <li class="cd-label">Action</li>
+                    <li class="action-btn"><a href="#0">+ Button</a></li>
+                </ul>
+            </nav>
+        </main>
+    </head>
+    <body>
+        <section>
+       <select class="company" id="company">
+                {% for key,values in companies.items %}
+                    <option id="company_id_{{forloop.counter}}" class="{{ key }}" href="#">{{ values.0 }}</option>
+                {% endfor %}
+            </select>
+        <div class="content-wrapper" id="data" style="padding-top:100px">
+                <h1>Responsive Sidebar Navigation</h1>
+                <script>
+                    google.charts.load('current', {'packages':['table']});
+                    google.charts.setOnLoadCallback(drawTable);
+                    function drawTable() 
+                    {
+
+                        $.getJSON('/plots/superadmin_data/', {'company': $('#company').val() }, function(json){
+
+                            var data = new google.visualization.DataTable();
+    //                                data.addColumn('string', 'Name');      name
+                                data.addColumn('string', 'Email');
+                                data.addColumn('string', 'Company');
+                              data.addRows(json['data']);                
+                                var table = new google.visualization.Table(document.getElementById('data'));
+                                table.draw(data, {showRowNumber: true, width: '50%', height: '100%'});
+                            });
+                    }    
+                </script>
+        </div>
+             
+            
+        
+        </section>
+        <script>
+            $("#company").change(function() {
+                drawTable();
+            });
+        </script>
+    </body>
+
+</html>
