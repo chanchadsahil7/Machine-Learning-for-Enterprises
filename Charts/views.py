@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .reports import *
 import json
 import os
+import pandas as pd
+from .reports import *
 
 # from django.template.context import RequestContext
 data = {}
@@ -86,7 +88,8 @@ def simple_upload(request):
         fs = FileSystemStorage()
         filename = fs.save(os.path.curdir + "\\Charts\\" + myfile.name, myfile)
         uploaded_file_url = fs.url(filename)
+        header = get_header(os.path.curdir + "\\Charts\\" + myfile.name)
         return render(request, 'upload.html', {
-            'uploaded_file_url': uploaded_file_url
+            'uploaded_file_url': uploaded_file_url,
         })
     return render(request, 'upload.html')
