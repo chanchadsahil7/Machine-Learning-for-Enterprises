@@ -84,14 +84,14 @@ def logout(request):
     return redirect('/plots/')
 
 
-def simple_upload(request):
-    if request.method == 'POST' and request.FILES['myfile']:
-        myfile = request.FILES['myfile']
-        fs = FileSystemStorage()
-        filename = fs.save(os.path.curdir + "\\Charts\\" + myfile.name, myfile)
-        uploaded_file_url = fs.url(filename)
-        header = get_header(os.path.curdir + "\\Charts\\" + myfile.name)
-        return render(request, 'upload.html', {
-            'uploaded_file_url': uploaded_file_url,
-        })
-    return render(request, 'upload.html')
+# def simple_upload(request):
+#     if request.method == 'POST' and request.FILES['myfile']:
+#         myfile = request.FILES['myfile']
+#         fs = FileSystemStorage()
+#         filename = fs.save(os.path.curdir + "\\Charts\\" + myfile.name, myfile)
+#         uploaded_file_url = fs.url(filename)
+#         header = get_header(os.path.curdir + "\\Charts\\" + myfile.name)
+#         return render(request, 'upload.html', {
+#             'uploaded_file_url': uploaded_file_url,
+#         })
+#     return render(request, 'upload.html')

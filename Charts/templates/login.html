@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-
     <head>
-
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-
         <title>SB Admin 2 - Bootstrap Admin Theme</title>
-            <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
-            <link rel="stylesheet" href="{% static 'vendor/metisMenu/metisMenu.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/dist/css/sb-admin-2.css' %}">
-     <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}">
-
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-
+        <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'vendor/metisMenu/metisMenu.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/dist/css/sb-admin-2.css' %}">
+        <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}">
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     </head>
 
     <body>
@@ -49,7 +43,6 @@
                                             <input name="remember" type="checkbox" value="Remember Me">Remember Me
                                         </label>
                                     </div>
-                                    <!-- Change this to a button or input when using this as a form -->
                                     <a href="index.html" class="btn btn-lg btn-success btn-block">Login</a>
                                     <a class="btn btn-block btn-social btn-google-plus" href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'home' %}">
                                         <i class="fa fa-google-plus"></i> Sign in with Google
@@ -67,5 +60,6 @@
         <script src="{% static 'vendor/metisMenu/metisMenu.min.js'%}"></script>
         <script src="{% static 'dist/js/sb-admin-2.js'%}"></script>
         {% endif %}
+
     </body>
 </html>
