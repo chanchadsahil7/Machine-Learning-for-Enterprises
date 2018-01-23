@@ -21,7 +21,10 @@ def login(request):
     return render(request, 'login.html')
 
 def dashboard(request):
-    return render_to_response('pages/index.html', {})
+    return render_to_response('index.html', {})
+
+def upload(request):
+    return render_to_response('upload.html', {})
 
 @login_required(login_url='/plots/')
 def home(request):

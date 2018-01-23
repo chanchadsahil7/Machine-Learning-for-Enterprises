@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^superadmin_data/$',views.superadmin_data, name="superadmin_data"),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^upload/$', views.upload, name='upload'),
 ]
