@@ -1,3 +1,4 @@
+import pandas as pd
 def filter_data(company_id):
     json_obj = {}
     total_users = {
@@ -26,3 +27,9 @@ def filter_data(company_id):
 
 def get_header(filename):
     pass
+
+def get_columns(filename):
+
+    filedata = pd.read_csv(filename)
+    return list(filedata.columns.values)
+print(get_columns('data.csv'))
