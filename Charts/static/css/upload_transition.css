@@ -9,7 +9,7 @@
 
 html {
     height: 100%;
-    background: #ffffff; /* fallback for old browsers */
+    background: #6441A5; /* fallback for old browsers */
     background: -webkit-linear-gradient(to left, #6441A5, #2a0845); /* Chrome 10-25, Safari 5.1-6 */
 }
 
@@ -129,7 +129,7 @@ body {
 
 #progressbar li {
     list-style-type: none;
-    color: #6441A5;
+    color: white;
     text-transform: uppercase;
     font-size: 9px;
     width: 33.33%;
@@ -157,7 +157,7 @@ body {
     content: '';
     width: 100%;
     height: 2px;
-    background: green;
+    background: white;
     position: absolute;
     left: -50%;
     top: 9px;

@@ -24,7 +24,20 @@ def dashboard(request):
     return render_to_response('index.html', {})
 
 def upload(request):
-    return render_to_response('upload.html', {})
+    if request.method == 'POST':
+        print(request.POST)
+
+    if request.method == 'POST' and request.FILES['filename']:
+        print(request.FILES)
+        myfile = request.FILES['filename']
+        fs = FileSystemStorage()
+        filename = fs.save(os.path.curdir + "/Charts/" + myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        header = get_header(os.path.curdir + "/Charts/" + myfile.name)
+        return render(request, 'upload.html', {
+            'uploaded_file_url': uploaded_file_url,
+        })
+    return render(request, 'upload.html')
 
 @login_required(login_url='/plots/')
 def home(request):
@@ -88,13 +101,3 @@ def logout(request):
 
 
 # def simple_upload(request):
-#     if request.method == 'POST' and request.FILES['myfile']:
-#         myfile = request.FILES['myfile']
-#         fs = FileSystemStorage()
-#         filename = fs.save(os.path.curdir + "\\Charts\\" + myfile.name, myfile)
-#         uploaded_file_url = fs.url(filename)
-#         header = get_header(os.path.curdir + "\\Charts\\" + myfile.name)
-#         return render(request, 'upload.html', {
-#             'uploaded_file_url': uploaded_file_url,
-#         })
-#     return render(request, 'upload.html')
