@@ -45,7 +45,8 @@
                     data: data,
                     success: function(result)
                     {
-                        window.location = "/plots/data_cleaning.html";;
+                        $("#widget1").hide();
+                        $("#widget2").show();
                     }
                 });
 
@@ -148,10 +149,16 @@
                                 <button class="btn btn-primary" id="remove">Remove</button>
                                 <button class="btn btn-primary" id="undo_remove">Undo Remove</button>
                             </div>
+                            <div class="panel-body" id="widget2">
+                                <p>hello world</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="replace">
+            <p>hello</p>
         </div>
 
         <script src="{% static 'js/jquery.min.js'%}"></script>

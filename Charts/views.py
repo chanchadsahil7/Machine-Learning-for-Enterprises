@@ -25,7 +25,7 @@ def dashboard(request):
 
 def data_cleaning(request):
     print(request.POST)
-    return render_to_response('data_cleaning.html', {})
+    return render_to_response('filter_data.html', {'hi':"hi"})
 
 def file_upload(request):
     if request.method == 'POST' and request.FILES['filename']:
