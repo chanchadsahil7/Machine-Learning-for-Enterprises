@@ -4,11 +4,11 @@ from django.http import JsonResponse
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .reports import *
+from Charts import reports
 import json
 import os
 import pandas as pd
-from .reports import *
+
 
 # from django.template.context import RequestContext
 data = {}
@@ -29,11 +29,12 @@ def upload(request):
 
     if request.method == 'POST' and request.FILES['filename']:
         print(request.FILES)
+        company_name="company"
         myfile = request.FILES['filename']
         fs = FileSystemStorage()
-        filename = fs.save(os.path.curdir + "/Charts/" + myfile.name, myfile)
+        filename = fs.save(os.join(os.path.curdir,"Charts" + "Data" + company_name +  myfile.name, myfile))
         uploaded_file_url = fs.url(filename)
-        header = get_header(os.path.curdir + "/Charts/" + myfile.name)
+        header = get_columns(os.join(os.path.curdir,"Charts" + "Data" + company_name +  myfile.name, myfile))
         return render(request, 'upload.html', {
             'uploaded_file_url': uploaded_file_url,
         })
@@ -99,5 +100,3 @@ def logout(request):
     auth_logout(request)
     return redirect('/plots/')
 
-
-# def simple_upload(request):
