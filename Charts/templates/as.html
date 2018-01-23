@@ -7,21 +7,52 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
+
         <title>SP Admin 2 - Bootstrap Admin Theme</title>
+
         <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'vendor/metisMenu/metisMenu.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/dist/css/sb-admin-2.css' %}">
         <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}">
-        <style>
-            #myBar {
-                width: 10%;
-                height: 30px;
-                background-color: #4CAF50;
-                text-align: center; /* To center it horizontally (if you want) */
-                line-height: 30px; /* To center it vertically */
-                color: white;
+        <script>
+            function submit_list()
+            {
+                var filters= new Array();
+                var filterbox = document.getElementById('ListOne');
+                for(i=0;i<filterbox.length;i++)
+                {
+                    filters[i]=filterbox.options[i].text
+                }
+                var metrics= new Array();
+                var metricsbox = document.getElementById('ListTwo');
+                for(i=0;i<metricsbox.length;i++)
+                {
+                    metrics[i]=metricsbox.options[i].text
+                }
+                var remove= new Array();
+                var removebox = document.getElementById('ListThree');
+                for(i=0;i<removebox.length;i++)
+                {
+                    remove[i]=removebox.options[i].text
+                }
+                console.log(filters, metrics, remove);
+
+                var data = {'filters': filters, 'metrics':metrics, 'remove':remove};
+
+                $.ajax({
+                    type: "POST",
+                    url: '/plots/data_cleaning/',
+                    data: data,
+                    success: function(result)
+                    {
+                        $("#widget1").hide();
+                        $("#widget2").show();
+                    }
+                });
+
             }
-        </style>
+        </script>
+
     </head>
     <body>
         <div id="wrapper">
@@ -91,22 +122,51 @@
             <div id="page-wrapper">
                 <div class="row" style="padding-top:30px">
                     <div class="col-lg-12">
+                        <h1 class="page-header">Filter Data</h1>
                         <div class="panel panel-default">
                             <div class="panel-body" id="widget1">
-                                <h3>Upload File</h3>
-                                <form onsubmit="submit_form(); event.preventDefault(); " method="POST" id="form1" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <label for="files" class="btn btn-primary">Upload</label>
-                                    <input id="files" style="visibility:hidden;" type="file" name="filename">
+                                <div class="panel-heading" style="float:left">
+                                    <h3>Filters</h3>
+                                    <select class="selectpicker" id="ListOne" multiple >
+                                        {% for items in header %}
+                                            <option value="{{ forloop.counter }}" style="padding:3px">{{items}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
 
-                                    <input type="submit" class="btn btn-primary" id="submit" value="Submit">
-                                </form>
+                                <div class="panel-heading" style="float:left;margin-left:10px">
+                                    <h3>Metrics</h3>
+                                    <select class="selectpicker" id="ListTwo" multiple="multiple"></select>
+                                </div>
+
+                                <div class="panel-heading" style="margin-left:10px">
+                                    <h3>Remove</h3>
+                                    <select class="selectpicker" id="ListThree" multiple="multiple"></select>
+                                </div>
+                                <br><br>
+
+                                <input class="btn btn-primary" type="button" id="left" value="<" />
+                                <input class="btn btn-primary" type="button" id="right" value=">" />
+
+                                <button onclick="return submit_list();" class="btn btn-primary" id="submit">Submit</button>
+                                <button class="btn btn-primary" id="remove">Remove</button>
+                                <button class="btn btn-primary" id="undo_remove">Undo Remove</button>
+                            </div>
+
+                        </div>
+                        <div class="panel panel-default" style="display: none;" id="widget2">
+                            <div class="panel-body" >
+                                <p>hello world</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div id="replace">
+            <p>hello</p>
+        </div>
+
         <script src="{% static 'js/jquery.min.js'%}"></script>
         <script src="{% static 'js/main.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js'%}"></script>
@@ -117,29 +177,48 @@
         <script src="{% static 'js/sb-admin-2.js'%}"></script>
 
         <script>
-            function submit_form()
-            {
-                $("#form1").submit();
-            }
-        </script>
-        <script>
-            $.ajax({
-                xhr: function(){
-                   var xhr = new window.XMLHttpRequest();
-                   xhr.upload.addEventListener("progress", function(evt){
-                       if (evt.lengthComputable) {
-                          var percentComplete = evt.loaded / evt.total;
-                          console.log(percentComplete);
-                       }
-                   }, false);
-                   return xhr;
-                },
-                complete:function(){
-                    console.log("Request finished.");
+            $(function () {
+                function moveItems(origin, dest)
+                {
+                    $(origin).find(':selected').appendTo(dest);
                 }
+                function moveAllItems(origin, dest)
+                {
+                    $(origin).children().appendTo(dest);
+                }
+                $('#left').click(function ()
+                {
+                    moveItems('#ListTwo', '#ListOne');
+                    $("#ListOne")[0].selectedIndex = -1;
+                    $("#ListTwo")[0].selectedIndex = -1;
+                    $("#ListThree")[0].selectedIndex = -1;
+                });
+                $('#right').on('click', function ()
+                {
+                    moveItems('#ListOne', '#ListTwo');
+                    $("#ListOne")[0].selectedIndex = -1;
+                    $("#ListTwo")[0].selectedIndex = -1;
+                    $("#ListThree")[0].selectedIndex = -1;
+                });
+                $('#remove').click(function ()
+                {
+                    moveItems('#ListOne', '#ListThree');
+                    moveItems('#ListTwo', '#ListThree');
+                    $("#ListOne")[0].selectedIndex = -1;
+                    $("#ListTwo")[0].selectedIndex = -1;
+                    $("#ListThree")[0].selectedIndex = -1;
+                });
+                $('#undo_remove').click(function ()
+                {
+                    moveItems('#ListThree', '#ListOne');
+                    $("#ListOne")[0].selectedIndex = -1;
+                    $("#ListTwo")[0].selectedIndex = -1;
+                    $("#ListThree")[0].selectedIndex = -1;
+                });
             });
+
         </script>
-
     </body>
-
 </html>
+
+

@@ -17,28 +17,32 @@
         <script>
             function submit_list()
             {
-                var filters= new Array();
-                var filterbox = document.getElementById('ListOne');
-                for(i=0;i<filterbox.length;i++)
+                var filters = new Array();
+                var ul = document.getElementById("ListOne");
+                var items = ul.getElementsByTagName("li");
+                for(var i=0; i<items.length; i++)
                 {
-                    filters[i]=filterbox.options[i].text
+                    filters[i] = items[i].innerHTML;
                 }
-                var metrics= new Array();
-                var metricsbox = document.getElementById('ListTwo');
-                for(i=0;i<metricsbox.length;i++)
+
+                var metrics = new Array();
+                var ul = document.getElementById("ListTwo");
+                var items = ul.getElementsByTagName("li");
+                for(var i=0; i<items.length; i++)
                 {
-                    metrics[i]=metricsbox.options[i].text
+                    metrics[i] = items[i].innerHTML;
                 }
-                var remove= new Array();
-                var removebox = document.getElementById('ListThree');
-                for(i=0;i<removebox.length;i++)
+
+                var remove = new Array();
+                var ul = document.getElementById("ListThree");
+                var items = ul.getElementsByTagName("li");
+                for(var i=0; i<items.length; i++)
                 {
-                    remove[i]=removebox.options[i].text
+                    remove[i] = items[i].innerHTML;
                 }
+
                 console.log(filters, metrics, remove);
-
                 var data = {'filters': filters, 'metrics':metrics, 'remove':remove};
-
                 $.ajax({
                     type: "POST",
                     url: '/plots/data_cleaning/',
@@ -49,10 +53,25 @@
                         $("#widget2").show();
                     }
                 });
-
             }
         </script>
+    <style>
+        .dual-list .list-group {
+            margin-top: 8px;
+        }
 
+        .list-left li, .list-right li {
+            cursor: pointer;
+        }
+
+        .list-arrows {
+            padding-top: 15px;
+        }
+
+        .list-arrows button {
+            margin-bottom: 20px;
+        }
+    </style>
     </head>
     <body>
         <div id="wrapper">
@@ -120,46 +139,89 @@
                 </div>
             </nav>
             <div id="page-wrapper">
-                <div class="row" style="padding-top:30px">
-                    <div class="col-lg-12">
-                        <div class="panel panel-default">
-                            <div class="panel-body" id="widget1">
-                                <h3>Filter Data</h3>
-
-                                    <select id="ListOne" multiple>
-                                        {% for items in header %}
-                                            <option value="{{ forloop.counter }}">{{items}}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                    <select id="ListTwo" multiple="multiple">
-                                    </select>
-
-                                    <select id="ListThree" multiple="multiple">
-                                    </select>
-
-                                    <br />
-
-                                    <input type="button" id="left" value="<" />
-                                    <input type="button" id="right" value=">" />
-                                    <input type="button" id="leftall" value="<<" />
-                                    <input type="button" id="rightall" value=">>" />
-
-                                <button onclick="return submit_list();" class="btn btn-primary" id="submit">Submit</button>
-                                <button class="btn btn-primary" id="remove">Remove</button>
-                                <button class="btn btn-primary" id="undo_remove">Undo Remove</button>
+                <div id="widget1">
+                    <div class="row" style="padding-top:30px">
+                        <div class="dual-list list-left col-md-5">
+                            <div class="well text-right">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <div class="input-group">
+                                            <span class="input-group-addon glyphicon glyphicon-search"></span>
+                                            <input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="list-group" id="ListOne" style="max-height:200px;overflow-y:scroll">
+                                    {% for items in header %}
+                                        <li class="list-group-item">{{items}}</li>
+                                    {% endfor %}
+                                </ul>
                             </div>
-                            <div class="panel-body" id="widget2">
-                                <p>hello world</p>
+                        </div>
+
+                        <div class="list-arrows col-md-1 text-center">
+                            <button class="btn btn-default btn-sm move-left">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </button>
+
+                            <button class="btn btn-default btn-sm move-right" style="margin-top:10px">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </button>
+
+                            <button class="btn btn-default btn-sm remove" style="margin-top:10px">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+
+                            <button class="btn btn-default btn-sm undo_remove" style="margin-top:10px">
+                                <span class="glyphicon glyphicon-retweet"></span>
+                            </button>
+
+                            <button onclick="return submit_list();" class="btn btn-default btn-sm submit" style="margin-top:10px">
+                                <span class="glyphicon glyphicon-ok"></span>
+                            </button>
+                        </div>
+
+                        <div class="dual-list list-right col-md-5">
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <div class="input-group">
+                                            <input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+                                            <span class="input-group-addon glyphicon glyphicon-search"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="list-group" id="ListTwo" style="max-height:200px;overflow-y:scroll">
+                                </ul>
                             </div>
+                        </div>
+
+                        <div class="dual-list list-remove col-md-5">
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <div class="input-group">
+                                            <input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+                                            <span class="input-group-addon glyphicon glyphicon-search"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="list-group" id="ListThree" style="max-height:200px;overflow-y:scroll">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:30px; display: none;" id="widget2">
+                    <div class="panel panel-default">
+                        <div class="panel-body" >
+                            <p>hello world</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="replace">
-            <p>hello</p>
-        </div>
+
 
         <script src="{% static 'js/jquery.min.js'%}"></script>
         <script src="{% static 'js/main.js' %}"></script>
@@ -172,42 +234,51 @@
 
         <script>
             $(function () {
-                function moveItems(origin, dest)
-                {
-                    $(origin).find(':selected').appendTo(dest);
-                }
-                function moveAllItems(origin, dest)
-                {
-                    $(origin).children().appendTo(dest);
-                }
-                $('#left').click(function ()
-                {
-                    moveItems('#ListTwo', '#ListOne');
-                    $("#ListOne")[0].selectedIndex = -1;
-                    $("#ListTwo")[0].selectedIndex = -1;
-                    $("#ListThree")[0].selectedIndex = -1;
+                $('body').on('click', '.list-group .list-group-item', function () {
+                    $(this).toggleClass('active');
                 });
-                $('#right').on('click', function ()
-                {
-                    moveItems('#ListOne', '#ListTwo');
-                    $("#ListOne")[0].selectedIndex = -1;
-                    $("#ListTwo")[0].selectedIndex = -1;
-                    $("#ListThree")[0].selectedIndex = -1;
+                $('.list-arrows button').click(function () {
+                    var $button = $(this), actives = '';
+                    if ($button.hasClass('move-left'))
+                    {
+                        actives = $('.list-right ul li.active');
+                        actives.clone().appendTo('.list-left ul');
+                        actives.remove();
+                    }
+                    else if ($button.hasClass('move-right'))
+                    {
+                        actives = $('.list-left ul li.active');
+                        actives.clone().appendTo('.list-right ul');
+                        actives.remove();
+                    }
+                    else if ($button.hasClass('remove'))
+                    {
+                        actives = $('.list-left ul li.active');
+                        actives.clone().appendTo('.list-remove ul');
+                        actives.remove();
+                        actives = $('.list-right ul li.active');
+                        actives.clone().appendTo('.list-remove ul');
+                        actives.remove();
+                    }
+                    else if ($button.hasClass('undo_remove'))
+                    {
+                        actives = $('.list-remove ul li.active');
+                        actives.clone().appendTo('.list-left ul');
+                        actives.remove();
+                    }
+                $('.list-group-item').removeClass('active');
                 });
-                $('#remove').click(function ()
-                {
-                    moveItems('#ListOne', '#ListThree');
-                    moveItems('#ListTwo', '#ListThree');
-                    $("#ListOne")[0].selectedIndex = -1;
-                    $("#ListTwo")[0].selectedIndex = -1;
-                    $("#ListThree")[0].selectedIndex = -1;
-                });
-                $('#undo_remove').click(function ()
-                {
-                    moveItems('#ListThree', '#ListOne');
-                    $("#ListOne")[0].selectedIndex = -1;
-                    $("#ListTwo")[0].selectedIndex = -1;
-                    $("#ListThree")[0].selectedIndex = -1;
+
+                $('[name="SearchDualList"]').keyup(function (e) {
+                    var code = e.keyCode || e.which;
+                    if (code == '9') return;
+                    if (code == '27') $(this).val(null);
+                    var $rows = $(this).closest('.dual-list').find('.list-group li');
+                    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+                    $rows.show().filter(function () {
+                        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+                        return !~text.indexOf(val);
+                    }).hide();
                 });
             });
 
