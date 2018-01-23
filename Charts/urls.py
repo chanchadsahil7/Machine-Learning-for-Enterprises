@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^upload/$', views.file_upload, name='upload'),
-    # url(r'^upload1/$', views.simple_upload, name='upload1'),
+    url(r'^data_cleaning/$', views.data_cleaning, name='data_cleaning'),
 ]
 
 

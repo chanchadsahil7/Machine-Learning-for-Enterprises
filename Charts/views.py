@@ -23,6 +23,10 @@ def login(request):
 def dashboard(request):
     return render_to_response('index.html', {})
 
+def data_cleaning(request):
+    print(request.POST)
+    return render_to_response('data_cleaning.html', {})
+
 def file_upload(request):
     if request.method == 'POST' and request.FILES['filename']:
         company_name="company"
@@ -30,9 +34,9 @@ def file_upload(request):
         fs = FileSystemStorage()
         filename = fs.save(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name), myfile)
         uploaded_file_url = fs.url(filename)
-        #header = get_columns(os.path.join(os.path.curdir,"Charts" + "Data" + company_name + myfile.name))
-        return render(request, 'upload.html', {
-            #'header': header,
+        header = reports.get_columns(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name))
+        return render(request, 'filter_data.html', {
+            'header': header,
         })
     return render(request, 'upload.html')
 
