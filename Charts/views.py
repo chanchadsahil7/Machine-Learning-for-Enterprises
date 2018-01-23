@@ -23,20 +23,16 @@ def login(request):
 def dashboard(request):
     return render_to_response('index.html', {})
 
-def upload(request):
-    if request.method == 'POST':
-        print(request.POST)
-
+def file_upload(request):
     if request.method == 'POST' and request.FILES['filename']:
-        print(request.FILES)
         company_name="company"
         myfile = request.FILES['filename']
         fs = FileSystemStorage()
-        filename = fs.save(os.join(os.path.curdir,"Charts" + "Data" + company_name +  myfile.name, myfile))
+        filename = fs.save(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name), myfile)
         uploaded_file_url = fs.url(filename)
-        header = get_columns(os.join(os.path.curdir,"Charts" + "Data" + company_name +  myfile.name, myfile))
+        #header = get_columns(os.path.join(os.path.curdir,"Charts" + "Data" + company_name + myfile.name))
         return render(request, 'upload.html', {
-            'uploaded_file_url': uploaded_file_url,
+            #'header': header,
         })
     return render(request, 'upload.html')
 
