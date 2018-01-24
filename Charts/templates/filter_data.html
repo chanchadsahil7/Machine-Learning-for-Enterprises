@@ -57,21 +57,21 @@
                         for(i=0;i<a.length;i++)
                         {
                             $("#metrics_table").append('<tr id="'+a[i]+ '">\
-                                                            <td>' + a[i] + '</td>\
-                                                            <td>\
-                                                                <label class="radio-inline">\
-                                                                  <input type="radio" id="mean" name="' +i+ '">\
-                                                                </label>\
+                                                            <td class="col-md-3" style="padding:10px"><center>' + a[i] + '</center></td>\
+                                                            <td class="col-md-3" style="padding-bottom:20px">\
+                                                                <center><label class="radio-inline">\
+                                                                  <input type="radio" id="mean" name="' +i+ '" checked="checked">\
+                                                                </label></center>\
                                                             </td>\
-                                                            <td>\
-                                                                <label class="radio-inline">\
+                                                            <td class="col-md-3" style="padding-bottom:20px">\
+                                                                <center><label class="radio-inline">\
                                                                   <input type="radio" id="median" name="' +i+ '">\
-                                                                </label>\
+                                                                </label></center>\
                                                             </td>\
-                                                            <td>\
-                                                                <label class="radio-inline">\
+                                                            <td class="col-md-3" style="padding-bottom:20px">\
+                                                                <center><label class="radio-inline">\
                                                                   <input type="radio" id="mode" name="' +i+ '">\
-                                                                </label>\
+                                                                </label></center>\
                                                             </td>\
                                                         </tr>');
                         }
@@ -227,14 +227,20 @@
             </nav>
             <div id="page-wrapper">
                 <div id="widget1">
-                    <div class="row" style="padding-top:30px">
+                    <div class="row">
+                        <h1 class="page-header">Select Filters and Metrics</h1>
                         <div class="dual-list list-left col-md-4">
                             <div class="well text-right">
+                                <center>
+                                <div class="panel-heading">
+                                    <h4>Filters</h4>
+                                </div>
+                                </center>
                                 <div class="row">
                                     <div class="col-md-10">
                                         <div class="input-group">
-                                            <span class="input-group-addon glyphicon glyphicon-search"></span>
                                             <input type="text" name="SearchDualList" class="form-control" placeholder="search" />
+                                            <span class="input-group-addon glyphicon glyphicon-search"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -248,6 +254,11 @@
 
                         <div class="dual-list list-right col-md-4">
                             <div class="well">
+                                <center>
+                                <div class="panel-heading">
+                                    <h4>Metrics</h4>
+                                </div>
+                                </center>
                                 <div class="row">
                                     <div class="col-md-10">
                                         <div class="input-group">
@@ -263,6 +274,11 @@
 
                         <div class="dual-list list-remove col-md-4">
                             <div class="well">
+                                <center>
+                                <div class="panel-heading">
+                                    <h4>Remove Elements</h4>
+                                </div>
+                                </center>
                                 <div class="row">
                                     <div class="col-md-10">
                                         <div class="input-group">
@@ -304,7 +320,7 @@
                         </div>
                         <div class="col-md-4"></div>
                     </div>
-                    <div class="row" style="padding-top:30px">
+                    <div class="row" style="padding-top:30px;padding-bottom:30px">
                         <div class="col-md-12">
                             <center>
                                 <input type="hidden" id="filename" value="{{ filename }}">
@@ -316,19 +332,21 @@
                 <div class="row" style="padding-top:30px; display: none;" id="widget2">
                     <div class="panel panel-default">
                         <div class="panel-body" id="show">
-                            <table id="metrics_table">
-                                <thead>
-                                    <tr>
-                                        <th>Metrics</th>
-                                        <th>Mean</th>
-                                        <th>Median</th>
-                                        <th>Mode</th>
-                                    </tr>
-                                </thead>
-                            </table>
+                            <div class="table-responsive">
+                                <table id="metrics_table" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th><center>Metrics</center></th>
+                                            <th><center>Mean</center></th>
+                                            <th><center>Median</center></th>
+                                            <th><center>Mode</center></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
-                        <div class="row" style="padding-top:30px">
-                            <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12" style="margin-bottom:20px">
                                 <center>
                                     <button onclick="return submit_metrics();" class="btn btn-primary submit">Submit</button>
                                 </center>

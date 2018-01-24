@@ -35,7 +35,7 @@ def get_columns(filename):
 
 '''def get_connection():
 	#connection establishment
-	conn = MySQLdb.connect(host="localhost",user="root",password="",db="sample")
+	conn = MySQLdb.connect(host="localhost",user="root",password="pass",db="sample")
 	return conn'''
 
 def get_numerical_metrics(filename,metrics):
