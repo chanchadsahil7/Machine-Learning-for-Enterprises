@@ -24,8 +24,11 @@ def dashboard(request):
     return render_to_response('index.html', {})
 
 def data_cleaning(request):
-    print(request.POST)
-    return render_to_response('filter_data.html', {'hi':"hi"})
+    if request.method == 'POST':
+        filename = request.POST['filename']
+        metrics = request.POST['metrics']
+        metrics_data = reports.get_numerical_metrics(filename,metrics)
+    return render_to_response('filter_data.html', {'data': metrics_data})
 
 def file_upload(request):
     if request.method == 'POST' and request.FILES['filename']:
@@ -37,6 +40,7 @@ def file_upload(request):
         header = reports.get_columns(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name))
         return render(request, 'filter_data.html', {
             'header': header,
+            'filename':uploaded_file_url,
         })
     return render(request, 'upload.html')
 
@@ -91,7 +95,7 @@ def super_user(request):
 
 def superadmin_data(request):
     company_name = request.GET.get("company",None)
-    data_filtered = filter_data(company_name)
+    data_filtered = reports.filter_data(company_name)
     print(data_filtered)
     response = JsonResponse({'data':data_filtered})
     return response

@@ -40,9 +40,9 @@
                 {
                     remove[i] = items[i].innerHTML;
                 }
-
-                console.log(filters, metrics, remove);
-                var data = {'filters': filters, 'metrics':metrics, 'remove':remove};
+                var filename=document.getElementById("filename").value;
+                var data = {'filters': filters, 'metrics':metrics, 'remove':remove,'filename':filename};
+                console.log(data);
                 $.ajax({
                     type: "POST",
                     url: '/plots/data_cleaning/',
@@ -175,7 +175,7 @@
                             <button class="btn btn-default btn-sm undo_remove" style="margin-top:10px">
                                 <span class="glyphicon glyphicon-retweet"></span>
                             </button>
-
+                            <input type="hidden" id="filename" value="{{ filename }}">
                             <button onclick="return submit_list();" class="btn btn-default btn-sm submit" style="margin-top:10px">
                                 <span class="glyphicon glyphicon-ok"></span>
                             </button>
