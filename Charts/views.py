@@ -25,10 +25,11 @@ def dashboard(request):
 
 def data_cleaning(request):
     if request.method == 'POST':
-        filename = request.POST['filename']
-        metrics = request.POST['metrics']
+        data = json.loads(request.body.decode(encoding='UTF-8'))
+        filename = data['filename']
+        metrics = data['metrics']
         metrics_data = reports.get_numerical_metrics(filename,metrics)
-    return render_to_response('filter_data.html', {'data': metrics_data})
+        return render_to_response('filter_data.html', {'data': metrics_data})
 
 def file_upload(request):
     if request.method == 'POST' and request.FILES['filename']:

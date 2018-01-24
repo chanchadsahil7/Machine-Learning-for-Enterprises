@@ -17,40 +17,46 @@
         <script>
             function submit_list()
             {
-                var filters = new Array();
+                var filter = new Array();
                 var ul = document.getElementById("ListOne");
                 var items = ul.getElementsByTagName("li");
                 for(var i=0; i<items.length; i++)
                 {
-                    filters[i] = items[i].innerHTML;
+                    filter[i] = items[i].innerHTML;
                 }
 
-                var metrics = new Array();
+                var metric = new Array();
                 var ul = document.getElementById("ListTwo");
                 var items = ul.getElementsByTagName("li");
                 for(var i=0; i<items.length; i++)
                 {
-                    metrics[i] = items[i].innerHTML;
+                    metric[i] = items[i].innerHTML;
                 }
 
-                var remove = new Array();
+                var remove_elements = new Array();
                 var ul = document.getElementById("ListThree");
                 var items = ul.getElementsByTagName("li");
                 for(var i=0; i<items.length; i++)
                 {
-                    remove[i] = items[i].innerHTML;
+                    remove_elements[i] = items[i].innerHTML;
                 }
                 var filename=document.getElementById("filename").value;
-                var data = {'filters': filters, 'metrics':metrics, 'remove':remove,'filename':filename};
+                var data = {'filters': filter, 'metrics':metric, 'remove':remove_elements,'filename':filename};
                 console.log(data);
+                $.ajaxSetup({traditional: true});
                 $.ajax({
                     type: "POST",
                     url: '/plots/data_cleaning/',
-                    data: data,
+                    data: JSON.stringify(data),
                     success: function(result)
                     {
+                        console.log(result.Result);
                         $("#widget1").hide();
                         $("#widget2").show();
+                    },
+                    error: function(jqXHR, exception) {
+
+                        console.log(exception);
                     }
                 });
             }
