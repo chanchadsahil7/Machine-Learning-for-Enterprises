@@ -56,14 +56,84 @@
                         var a = data.numerical_missing;
                         for(i=0;i<a.length;i++)
                         {
-                            $("#metrics_table").append('<tr>\
+                            $("#metrics_table").append('<tr id="'+a[i]+ '">\
                                                             <td>' + a[i] + '</td>\
-                                                            <td> Mode </td>\
-                                                            <td> Mean </td>\
-                                                            <td> Median </td>\
+                                                            <td>\
+                                                                <label class="radio-inline">\
+                                                                  <input type="radio" id="mean" name="' +i+ '">\
+                                                                </label>\
+                                                            </td>\
+                                                            <td>\
+                                                                <label class="radio-inline">\
+                                                                  <input type="radio" id="median" name="' +i+ '">\
+                                                                </label>\
+                                                            </td>\
+                                                            <td>\
+                                                                <label class="radio-inline">\
+                                                                  <input type="radio" id="mode" name="' +i+ '">\
+                                                                </label>\
+                                                            </td>\
                                                         </tr>');
                         }
                         $("#widget2").show();
+                    },
+                    error: function(jqXHR, exception) {
+
+                        console.log(exception);
+                    }
+                });
+            }
+        </script>
+        <script>
+            function submit_metrics()
+            {
+                var rowCount = $('#metrics_table tr').length;
+                var data1 = {};
+                console.log(rowCount);
+                for(var i=0; i<rowCount-1; i++)
+                {
+                    var value = $('input[name="' + i + '"]:checked').attr('id');
+                    var key = $('input[name="' + i + '"]:checked').closest('tr').attr('id');
+                    data1[key] = value;
+                }
+
+                var filter = new Array();
+                var ul = document.getElementById("ListOne");
+                var items = ul.getElementsByTagName("li");
+                for(var i=0; i<items.length; i++)
+                {
+                    filter[i] = items[i].innerHTML;
+                }
+
+                var metric = new Array();
+                var ul = document.getElementById("ListTwo");
+                var items = ul.getElementsByTagName("li");
+                for(var i=0; i<items.length; i++)
+                {
+                    metric[i] = items[i].innerHTML;
+                }
+
+                var remove_elements = new Array();
+                var ul = document.getElementById("ListThree");
+                var items = ul.getElementsByTagName("li");
+                for(var i=0; i<items.length; i++)
+                {
+                    remove_elements[i] = items[i].innerHTML;
+                }
+                var filename=document.getElementById("filename").value;
+                var data2 = {'filters': filter, 'metrics':metric, 'remove':remove_elements,'filename':filename};
+
+                var data = {};
+                data["data1"] = data1;
+                data["data2"] = data2;
+
+                $.ajax({
+                    type: "POST",
+                    url: '/plots/to_charts/',
+                    data: JSON.stringify(data),
+                    success: function(response)
+                    {
+                        $("#dashboard").click();
                     },
                     error: function(jqXHR, exception) {
 
@@ -132,7 +202,7 @@
                                 </div>
                             </li>
                             <li>
-                                <a href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                                <a href="{% url 'dashboard' %}"><i class="fa fa-dashboard fa-fw" id="dashboard"></i> Dashboard</a>
                             </li>
                             <li>
                                 <a href="{% url 'upload' %}"><i class="fa fa-table fa-fw"></i>Upload</a>
@@ -247,7 +317,22 @@
                     <div class="panel panel-default">
                         <div class="panel-body" id="show">
                             <table id="metrics_table">
+                                <thead>
+                                    <tr>
+                                        <th>Metrics</th>
+                                        <th>Mean</th>
+                                        <th>Median</th>
+                                        <th>Mode</th>
+                                    </tr>
+                                </thead>
                             </table>
+                        </div>
+                        <div class="row" style="padding-top:30px">
+                            <div class="col-md-12">
+                                <center>
+                                    <button onclick="return submit_metrics();" class="btn btn-primary submit">Submit</button>
+                                </center>
+                            </div>
                         </div>
                     </div>
                 </div>

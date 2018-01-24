@@ -31,6 +31,9 @@ def data_cleaning(request):
         metrics_data = reports.get_numerical_metrics(filename,metrics)
         return HttpResponse(json.dumps(metrics_data))
 
+def to_charts(request):
+    pass
+
 def file_upload(request):
     if request.method == 'POST' and request.FILES['filename']:
         company_name="company"
