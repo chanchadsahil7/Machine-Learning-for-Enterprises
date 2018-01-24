@@ -141,7 +141,7 @@
             <div id="page-wrapper">
                 <div id="widget1">
                     <div class="row" style="padding-top:30px">
-                        <div class="dual-list list-left col-md-5">
+                        <div class="dual-list list-left col-md-4">
                             <div class="well text-right">
                                 <div class="row">
                                     <div class="col-md-10">
@@ -159,29 +159,7 @@
                             </div>
                         </div>
 
-                        <div class="list-arrows col-md-1 text-center">
-                            <button class="btn btn-default btn-sm move-left">
-                                <span class="glyphicon glyphicon-chevron-left"></span>
-                            </button>
-
-                            <button class="btn btn-default btn-sm move-right" style="margin-top:10px">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
-                            </button>
-
-                            <button class="btn btn-default btn-sm remove" style="margin-top:10px">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </button>
-
-                            <button class="btn btn-default btn-sm undo_remove" style="margin-top:10px">
-                                <span class="glyphicon glyphicon-retweet"></span>
-                            </button>
-                            <input type="hidden" id="filename" value="{{ filename }}">
-                            <button onclick="return submit_list();" class="btn btn-default btn-sm submit" style="margin-top:10px">
-                                <span class="glyphicon glyphicon-ok"></span>
-                            </button>
-                        </div>
-
-                        <div class="dual-list list-right col-md-5">
+                        <div class="dual-list list-right col-md-4">
                             <div class="well">
                                 <div class="row">
                                     <div class="col-md-10">
@@ -196,7 +174,7 @@
                             </div>
                         </div>
 
-                        <div class="dual-list list-remove col-md-5">
+                        <div class="dual-list list-remove col-md-4">
                             <div class="well">
                                 <div class="row">
                                     <div class="col-md-10">
@@ -209,6 +187,42 @@
                                 <ul class="list-group" id="ListThree" style="max-height:200px;overflow-y:scroll">
                                 </ul>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:30px">
+                        <div class="col-md-4"></div>
+                        <div class="list-arrows col-md-4">
+                            <center>
+                                <div class="col-md-3">
+                                    <button class="btn btn-default btn-sm move-left">
+                                        <span class="glyphicon glyphicon-chevron-left"></span>
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-default btn-sm move-right">
+                                        <span class="glyphicon glyphicon-chevron-right"></span>
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-default btn-sm remove">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-default btn-sm undo_remove">
+                                        <span class="glyphicon glyphicon-retweet"></span>
+                                    </button>
+                                </div>
+                            </center>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+                    <div class="row" style="padding-top:30px">
+                        <div class="col-md-12">
+                            <center>
+                                <input type="hidden" id="filename" value="{{ filename }}">
+                                <button onclick="return submit_list();" class="btn btn-primary submit">Submit</button>
+                            </center>
                         </div>
                     </div>
                 </div>
