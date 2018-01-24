@@ -48,10 +48,21 @@
                     type: "POST",
                     url: '/plots/data_cleaning/',
                     data: JSON.stringify(data),
-                    success: function(result)
+                    success: function(response)
                     {
-                        console.log(result.Result);
                         $("#widget1").hide();
+                        data = JSON.parse(response);
+                        console.log(data);
+                        var a = data.numerical_missing;
+                        for(i=0;i<a.length;i++)
+                        {
+                            $("#metrics_table").append('<tr>\
+                                                            <td>' + a[i] + '</td>\
+                                                            <td> Mode </td>\
+                                                            <td> Mean </td>\
+                                                            <td> Median </td>\
+                                                        </tr>');
+                        }
                         $("#widget2").show();
                     },
                     error: function(jqXHR, exception) {
@@ -234,8 +245,9 @@
                 </div>
                 <div class="row" style="padding-top:30px; display: none;" id="widget2">
                     <div class="panel panel-default">
-                        <div class="panel-body" >
-                            <p>hello world</p>
+                        <div class="panel-body" id="show">
+                            <table id="metrics_table">
+                            </table>
                         </div>
                     </div>
                 </div>

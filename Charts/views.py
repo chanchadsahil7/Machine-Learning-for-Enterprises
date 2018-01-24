@@ -28,8 +28,8 @@ def data_cleaning(request):
         data = json.loads(request.body.decode(encoding='UTF-8'))
         filename = data['filename']
         metrics = data['metrics']
-        metrics_data = reports.get_numerical_metrics(filename,metrics,1)
-        return render_to_response('filter_data.html', {'data': metrics_data})
+        metrics_data = reports.get_numerical_metrics(filename,metrics)
+        return HttpResponse(json.dumps(metrics_data))
 
 def file_upload(request):
     if request.method == 'POST' and request.FILES['filename']:

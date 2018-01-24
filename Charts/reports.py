@@ -42,48 +42,48 @@ def get_numerical_metrics(filename,metrics):
 	'''conn=get_connection()
 	cur=conn.cursor()'''
 	#getting type of metrics
-    file_dt=pd.read_csv(filename)
-    dic_metrics_type={'numerical_missing':[],'numerical_non_missing':[], 'non_numerical':[]}
-    for i in metrics:
-    	if(file_dt[i].dtype == "int64" or file_dt[i].dtype == "float64"):
-            count_of_null_values=list(file_dt[i].isnull()).count(False)
-            if(count_of_null_values==0):
-                dic_metrics_type['numerical_non_missing'].append(i)
-            else:
-                dic_metrics_type['numerical_missing'].append(i)
-        else:
-            dic_metrics_type['non_numerical'].append(i)
-    #remove the columns
-    # for i in dic['remove']:
-    #     file_dt.drop([i],axis=1,inplace=True)
-    # #populate filter table
-    # id=1
+	file_dt=pd.read_csv(filename)
+	dic_metrics_type={'numerical_missing':[],'numerical_non_missing':[], 'non_numerical':[]}
+	for i in metrics:
+		if(file_dt[i].dtype == "int64" or file_dt[i].dtype == "float64"):
+			count_of_null_values=list(file_dt[i].isnull()).count(False)
+			if(count_of_null_values==0):
+				dic_metrics_type['numerical_non_missing'].append(i)
+			else:
+				dic_metrics_type['numerical_missing'].append(i)
+		else:
+			dic_metrics_type['non_numerical'].append(i)
+	#remove the columns
+	# for i in dic['remove']:
+	#     file_dt.drop([i],axis=1,inplace=True)
+	# #populate filter table
+	# id=1
 	# for i in dic['filters']:
 	# 	cur.execute("""INSERT INTO filters VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
 	# 	id=id+1
 	# conn.commit()
-    # id=1
+	# id=1
 	# for i in dic_metrics_type['non_numerical']:
 	# 	cur.execute("""INSERT INTO filters VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
 	# 	id=id+1
 	# conn.commit()
-    # #populate metrics table
-    # id=1
-    # for i in dic_metrics_type['numerical_missing']:
-    #     cur.execute("""INSERT INTO metrics VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
+	# #populate metrics table
+	# id=1
+	# for i in dic_metrics_type['numerical_missing']:
+	#     cur.execute("""INSERT INTO metrics VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
 	# 	id=id+1
 	# conn.commit()
-    # id=1
-    # for i in dic_metrics_type['numerical_non_missing']:
-    #     cur.execute("""INSERT INTO metrics VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
+	# id=1
+	# for i in dic_metrics_type['numerical_non_missing']:
+	#     cur.execute("""INSERT INTO metrics VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
 	# 	id=id+1
 	# conn.commit()
-    # #storing the database with table_name before
-    # table_name=get_function_name(filename,cid,'before')
-    # engine = create_engine("mysql+mysqldb://root:"+"@localhost/sample")
-    # data.to_sql(con=engine, if_exists='replace', name=table_name,index=False)
-    # conn.close()
-    return dic_metrics_type
+	# #storing the database with table_name before
+	# table_name=get_function_name(filename,cid,'before')
+	# engine = create_engine("mysql+mysqldb://root:"+"@localhost/sample")
+	# data.to_sql(con=engine, if_exists='replace', name=table_name,index=False)
+	# conn.close()
+	return dic_metrics_type
 
 '''def get_function_name(filename,cid,st):
 	conn=get_connection()
