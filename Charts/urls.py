@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
     url(r'^upload/$', views.file_upload, name='upload'),
     url(r'^data_cleaning/$', views.data_cleaning, name='data_cleaning'),
+    url(r'^to_charts/$', views.to_charts, name='to_charts'),
 ]
 
 

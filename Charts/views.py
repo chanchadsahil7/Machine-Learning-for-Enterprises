@@ -32,7 +32,14 @@ def data_cleaning(request):
         return HttpResponse(json.dumps(metrics_data))
 
 def to_charts(request):
-    pass
+    if request.method == 'POST':
+        data = json.loads(request.body.decode(encoding='UTF-8'))
+        filename = data['data2']['filename']
+        cleaning_metrics = data['data1']
+        dividing_metrics = data['data2']
+        cid=1
+        reports.fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid)
+        return HttpResponse()
 
 def file_upload(request):
     if request.method == 'POST' and request.FILES['filename']:
