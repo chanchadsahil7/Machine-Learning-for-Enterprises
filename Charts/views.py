@@ -28,7 +28,7 @@ def data_cleaning(request):
         data = json.loads(request.body.decode(encoding='UTF-8'))
         filename = data['filename']
         metrics = data['metrics']
-        metrics_data = reports.get_numerical_metrics(filename,metrics)
+        metrics_data = reports.get_numerical_metrics(filename,metrics,1)
         return render_to_response('filter_data.html', {'data': metrics_data})
 
 def file_upload(request):
@@ -104,4 +104,3 @@ def superadmin_data(request):
 def logout(request):
     auth_logout(request)
     return redirect('/plots/')
-
