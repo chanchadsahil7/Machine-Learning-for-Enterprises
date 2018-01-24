@@ -1,7 +1,7 @@
-import pandas as pd
 import MySQLdb
-from sqlalchemy import create_engine
+import pandas as pd
 import os
+from sqlalchemy import create_engine
 
 def filter_data(company_id):
 	json_obj = {}
@@ -29,65 +29,89 @@ def filter_data(company_id):
 
 	return company_list
 
-def get_header(filename):
-	pass
-
 def get_columns(filename):
-
 	filedata = pd.read_csv(filename)
 	return list(filedata.columns.values)
 
-def get_numerical_metrics(filename,dic,cid):
+def get_connection():
 	#connection establishment
-	conn = MySQLdb.connect(host="localhost",user="root",password="",db="sample")
+    conn = MySQLdb.connect(host="localhost",user="root",password="",db="sample")
+	return conn
+
+def get_numerical_metrics(filename,dic,cid):
+	conn=get_connection()
 	cur=conn.cursor()
 	#getting type of metrics
-	file_dt=pd.read_csv(filename)
-	metrics=dic['metrics']
-	dic_metrics_type={'numerical_missing':[],'numerical_non_missing':[], 'non_numerical':[]}
-	for i in metrics:
-		if(file_dt[i].dtype == "int64" or file_dt[i].dtype == "float64"):
-			count_of_null_values=list(file_dt[i].isnull()).count(False)
-			if(count_of_null_values==0):
-				dic_metrics_type['numerical_non_missing'].append(i)
-			else:
-				dic_metrics_type['numerical_missing'].append(i)
-		else:
-			dic_metrics_type['non_numerical'].append(i)
-	#remove the columns
-	for i in dic['remove']:
-		file_dt.drop([i],axis=1,inplace=True)
-	#populate filter table
-	id=1
+    file_dt=pd.read_csv(filename)
+    metrics=dic['metrics']
+    dic_metrics_type={'numerical_missing':[],'numerical_non_missing':[], 'non_numerical':[]}
+    for i in metrics:
+    	if(file_dt[i].dtype == "int64" or file_dt[i].dtype == "float64"):
+            count_of_null_values=list(file_dt[i].isnull()).count(False)
+            if(count_of_null_values==0):
+                dic_metrics_type['numerical_non_missing'].append(i)
+            else:
+                dic_metrics_type['numerical_missing'].append(i)
+        else:
+            dic_metrics_type['non_numerical'].append(i)
+    #remove the columns
+    for i in dic['remove']:
+        file_dt.drop([i],axis=1,inplace=True)
+    #populate filter table
+    id=1
 	for i in dic['filters']:
 		cur.execute("""INSERT INTO filters VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
 		id=id+1
 	conn.commit()
-	id=1
+    id=1
 	for i in dic_metrics_type['non_numerical']:
 		cur.execute("""INSERT INTO filters VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
 		id=id+1
 	conn.commit()
-	#populate metrics table
-	id=1
-	for i in dic_metrics_type['numerical_missing']:
-		cur.execute("""INSERT INTO metrics VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
+    #populate metrics table
+    id=1
+    for i in dic_metrics_type['numerical_missing']:
+        cur.execute("""INSERT INTO metrics VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
 		id=id+1
 	conn.commit()
-	id=1
-	for i in dic_metrics_type['numerical_non_missing']:
-		cur.execute("""INSERT INTO metrics VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
+    id=1
+    for i in dic_metrics_type['numerical_non_missing']:
+        cur.execute("""INSERT INTO metrics VALUES (%s,%s,%s,%s)""",(id,i,1,cid))
 		id=id+1
 	conn.commit()
-	#storing the database with table_name before
+    #storing the database with table_name before
+    table_name=get_function_name(filename,cid,'before')
+    engine = create_engine("mysql+mysqldb://root:"+"@localhost/sample")
+    data.to_sql(con=engine, if_exists='replace', name=table_name,index=False)
+    conn.close()
+    return dic_metrics_type
+
+def get_function_name(filename,cid,st):
+	conn=get_connection()
+	cur=conn.cursor()
 	query="Select name from company where id="+str(cid)
-	cur.execute(query)
-	t=cur.fetchall()
-	company_name=t[0][0]
-	s=os.path.basename(filename)
-	s=s.strip('.csv')
-	table_name=company_name+'_'+s+'_'+'before'
+    cur.execute(query)
+    t=cur.fetchall()
+    company_name=t[0][0]
+    s=os.path.basename(filename)
+    s=s.strip('.csv')
+    table_name=company_name+'_'+s+'_'+st
+	conn.close()
+	return table_name
+
+def data_cleaning_and_table_creation(filename,cid,metrics):
+	conn=get_connection()
+	dataframe_before = pd.read_sql('select * from company_titanic',conn)
+	for i in metrics:
+		if(metrics[i] == 'mean'):
+			dataframe_before[i].fillna(dataframe_before[i].mean(),inplace = True)
+		elif(metrics[i] == 'median'):
+			dataframe_before[i].fillna(dataframe_before[i].median(),inplace = True)
+		elif(metrics[i] == 'mode'):
+			dataframe_before[i].fillna(dataframe_before[i].mode,inplace = True)
+		else:
+			pass
+	conn.close()
+	table_name=get_function_name(filename,cid,'after')
 	engine = create_engine("mysql+mysqldb://root:"+"@localhost/sample")
-	file_dt.to_sql(con=engine, if_exists='replace', name=table_name,index=False)
-	cur.close()
-	return dic_metrics_type
+    data.to_sql(con=engine, if_exists='replace', name=table_name,index=False)
