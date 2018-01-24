@@ -119,7 +119,7 @@ def data_cleaning_and_table_creation(filename,cid,metrics):
 def get_file_name(filename,cid):
 	conn=get_connection()
 	cur=conn.cursor()
-	query="Select name from company where id="+str(cid)
+	query="Select name from company where cid="+str(cid)
 	cur.execute(query)
 	t=cur.fetchall()
 	company_name=t[0][0]
@@ -131,11 +131,11 @@ def get_file_name(filename,cid):
 
 def get_connection():
 	#connection establishment
-	conn = MySQLdb.connect(host="localhost",user="root",password="",db="sample")
+	conn = MySQLdb.connect(host="localhost",user="root",password="pass",db="mlcharts")
 	return conn
 
 def get_engine():
-	engine = create_engine("mysql+mysqldb://root:"+"@localhost/sample")
+	engine = create_engine("mysql+mysqldb://root:pass"+"@localhost/mlcharts")
 	return engine
 
 def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
@@ -156,7 +156,7 @@ def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
 	dic_metrics_type={'numerical_missing':[],'numerical_non_missing':[], 'non_numerical':[]}
 	for i in metrics:
 		if(dataframe_before[i].dtype == "int64" or dataframe_before[i].dtype == "float64"):
-			count_of_null_values=list(file_dt[i].isnull()).count(False)
+			count_of_null_values=list(dataframe_before[i].isnull()).count(False)
 			if(count_of_null_values==0):
 				dic_metrics_type['numerical_non_missing'].append(i)
 			else:
@@ -164,7 +164,7 @@ def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
 		else:
 			dic_metrics_type['non_numerical'].append(i)
 	#remove the columns
-	for i in dic['remove']:
+	for i in dividing_metrics['remove']:
 		dataframe_before.drop([i],axis=1,inplace=True)
 	#populate_filters_table
 	for i in dividing_metrics['filters']:
