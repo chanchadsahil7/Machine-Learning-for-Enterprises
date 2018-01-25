@@ -13,10 +13,38 @@
         <link rel="stylesheet" href="{% static 'css/sb-admin-2.css' %}">
         <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}">
 
-
         <title>ML Charts</title>
     </head>
+    <script>
+        function submit()
+        {
+            var rowCount = $('#select_filters select').length;
+            var data = {};
+            for(var i=1; i<=rowCount; i++)
+            {
+                var value = $( "#select_" +i+ " option:selected" ).text();
+                if(value!="All")
+                {
+                    data[$('#select_'+i).attr('name')] = value;
+                }
+            }
+            console.log(data);
 
+            $.ajax({
+                    type: "POST",
+                    url: '/plots/gen_charts/',
+                    data: JSON.stringify(data),
+                    success: function(response)
+                    {
+                        alert("hello");
+                    },
+                    error: function(jqXHR, exception) {
+
+                        console.log(exception);
+                    }
+                });
+        }
+    </script>
     <body>
         <div id="wrapper">
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -65,15 +93,7 @@
                             <a href="{% url 'upload' %}"><i class="fa fa-table fa-fw"></i>Upload</a>
                         </li>
                         <li>
-                            <a href="#collapseCharts" data-toggle="collapse"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level collapse" id="collapseCharts">
-                                <li>
-                                    <a href="{% url 'gen_charts' %}" id="stackbar">Stackbar Chart</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'gen_charts' %}" id="scatter">Scatter Chart</a>
-                                </li>
-                            </ul>
+                            <a href="{% url 'gen_charts' %}"><i class="fa fa-bar-chart-o fa-fw"></i> Charts</a>
                         </li>
                         <li>
                             <a href="{% url 'superadmin' %}"><i class="fa fa-table fa-fw"></i> Tables</a>
@@ -83,12 +103,20 @@
             </div>
         </nav>
         <div id="page-wrapper">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Dashboard</h1>
+            <div class="row" style="padding-top:30px">
+                <div id="select_filters">
+                    {% for key, value in data.items %}
+                    <select name="{{key}}" onchange="return submit();" id="select_{{forloop.counter}}">
+                        <option selected>All</option>>
+                        {% for i in value %}
+                        <option>{{i}}</option>
+                        {% endfor %}
+                    </select>
+                    {% endfor %}
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="padding-top:30px">
+
             </div>
         </div>
     </div>
