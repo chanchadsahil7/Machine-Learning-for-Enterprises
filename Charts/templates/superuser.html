@@ -63,15 +63,7 @@
                             <a href="{% url 'upload' %}"><i class="fa fa-table fa-fw"></i>Upload</a>
                         </li>
                         <li>
-                            <a href="#collapseCharts" data-toggle="collapse"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level collapse" id="collapseCharts">
-                                <li>
-                                    <a href="#" id="chart1">Chart 1</a>
-                                </li>
-                                <li>
-                                    <a href="#" id="chart2">Chart 2</a>
-                                </li>
-                            </ul>
+                            <a href="{% url 'gen_charts' %}"><i class="fa fa-bar-chart-o fa-fw"></i> Charts</a>
                         </li>
                         <li>
                             <a href="{% url 'superadmin' %}"><i class="fa fa-table fa-fw"></i> Tables</a>

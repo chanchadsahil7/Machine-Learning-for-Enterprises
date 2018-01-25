@@ -37,6 +37,11 @@ def gen_charts(request):
         filters = data['filters']
         chart_data = reports.gen_charts(filters)
         return HttpResponse(json.dumps(chart_data))
+    else:
+        cid=1
+        # data = reports.get_filters(cid)
+        data = {"Age":[1,2,3,4,5,6,7], "Height":[9,8,7,6,5,4,3], "Salary":[10,20,30,40,50,60,70]}
+        return render_to_response("charts.html", {"data":data})
 
 def to_charts(request):
     if request.method == 'POST':
