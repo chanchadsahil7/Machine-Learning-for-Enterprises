@@ -31,12 +31,16 @@ def data_cleaning(request):
         metrics_data = reports.get_numerical_metrics(filename,metrics)
         return HttpResponse(json.dumps(metrics_data))
 
-def gen_chats(request):
+def gen_charts(request):
     if request.method=="POST":
         data = json.loads(request.body.decode(encoding='UTF-8'))
         filters = data['filters']
         chart_data = reports.gen_charts(filters)
         return HttpResponse(json.dumps(chart_data))
+    else:
+        cid=1
+        data = reports.get_filters(cid)
+        return render_to_response("charts.html", {"data":data})
 
 def to_charts(request):
     if request.method == 'POST':
