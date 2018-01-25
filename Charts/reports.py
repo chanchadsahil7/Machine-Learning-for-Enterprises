@@ -183,3 +183,47 @@ def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
 	engine = get_engine()
 	dataframe_before.to_sql(con=engine, if_exists='replace', name=table_name,index=False)
 	conn.close()
+
+def gen_charts(fiters):
+	pass
+
+def get_filters(cid):
+	conn = get_connection()
+	cur = conn.cursor()
+
+	## for fetching the filters from filters table having cid == cid ##
+	query = """SELECT NAME FROM filters WHERE cid = """ + str(1)
+	cur.execute(query)
+	filters = [name[0] for name in cur.fetchall()]
+	filters = ",".join(filters)
+
+	## for fetching the company name from company table having cid == cid ##
+	query = """SELECT name FROM company WHERE cid = """ + str(cid)
+	cur.execute(query)
+	company_name = cur.fetchall()[0][0]
+
+	## for fetching all the table names in a database and getting the table name which has company_name as prefix ##
+	query = "SELECT table_name FROM information_schema.tables where table_schema='mlcharts';"
+	cur.execute(query)
+	for table in cur.fetchall():
+		if table[0].startswith(company_name + "_"):
+			table_name = table[0]
+			break
+
+	## for fetching the filters data from the table data ##
+	filters_data = pd.read_sql("SELECT " + filter + " FROM " + table_name, conn)
+
+	## for generating the unique values from the filters data ##
+	filters_unique_data = {}
+	for col in filters_data:
+		values = [val for val in list(filters_data[col].unique()) if pd.isnull(val) == False]
+		filters_unique_data[col] = values
+
+	filters_unique_data['table_name'] = table_name
+
+	## closing the connection ##
+	conn.close()
+	return filters_unique_data
+
+
+

@@ -35,6 +35,7 @@ def gen_charts(request):
     if request.method=="POST":
         data = json.loads(request.body.decode(encoding='UTF-8'))
         filters = data['filters']
+        cid = 1
         chart_data = reports.gen_charts(filters)
         return HttpResponse(json.dumps(chart_data))
 
