@@ -1,6 +1,7 @@
 import MySQLdb
 import pandas as pd
 import os
+import json
 from sqlalchemy import create_engine
 
 def filter_data(company_id):
@@ -131,11 +132,11 @@ def get_file_name(filename,cid):
 
 def get_connection():
 	#connection establishment
-	conn = MySQLdb.connect(host="localhost",user="root",password="raviprince57",db="mlcharts")
+	conn = MySQLdb.connect(host="localhost",user="root",password="pass",db="mlcharts")
 	return conn
 
 def get_engine():
-	engine = create_engine("mysql+mysqldb://root:raviprince57"+"@localhost/mlcharts")
+	engine = create_engine("mysql+mysqldb://root:pass"+"@localhost/mlcharts")
 	return engine
 
 def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
@@ -184,8 +185,24 @@ def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
 	dataframe_before.to_sql(con=engine, if_exists='replace', name=table_name,index=False)
 	conn.close()
 
-def gen_charts(fiters):
-	pass
+def gen_charts(tablename,data,cid):
+	conn = MySQLdb.connect(host="localhost", user="root", password="pass", db="mlcharts")
+	cur = conn.cursor()
+	dataframe_before = pd.read_sql('select name from metrics where cid=1', conn)
+	metrics = list(set(list(dataframe_before['name'])))
+	query = 'select '+ ",".join(metrics) + ' from ' + tablename
+	l = []
+	for i in data:
+		s = i + "='" + str(data[i]) + "'"
+	l.append(s)
+	query = '{} WHERE {}'.format(query, ' AND '.join(l))
+	dataframe_before = pd.read_sql(query, conn)
+	json_ex = dataframe_before.to_json(orient='split')
+	json_obj = json.loads(json_ex)
+	datatable = json_obj['data']
+	cols = json_obj['columns']
+	datatable.insert(0, cols)
+	return datatable
 
 def get_filters(cid):
 	conn = get_connection()
@@ -203,7 +220,7 @@ def get_filters(cid):
 	company_name = cur.fetchall()[0][0]
 
 	## for fetching all the table names in a database and getting the table name which has company_name as prefix ##
-	query = "SELECT table_name FROM information_schema.tables where table_schema='mlcharts';"
+	query = "SELECT table_name FROM information_schema.tables where table_schema='mlcharts'"
 	cur.execute(query)
 	for table in cur.fetchall():
 		if table[0].startswith(company_name + "_"):
@@ -211,7 +228,8 @@ def get_filters(cid):
 			break
 
 	## for fetching the filters data from the table data ##
-	filters_data = pd.read_sql("SELECT " + filter + " FROM " + table_name, conn)
+
+	filters_data = pd.read_sql("SELECT " + filters + " FROM " + table_name, conn)
 
 	## for generating the unique values from the filters data ##
 	filters_unique_data = {}
@@ -219,11 +237,9 @@ def get_filters(cid):
 		values = [val for val in list(filters_data[col].unique()) if pd.isnull(val) == False]
 		filters_unique_data[col] = values
 
-	filters_unique_data['table_name'] = table_name
+	filters_unique_data['tablename'] = table_name
 
 	## closing the connection ##
 	conn.close()
 	return filters_unique_data
-
-
 

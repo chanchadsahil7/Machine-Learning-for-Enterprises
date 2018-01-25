@@ -34,15 +34,19 @@ def data_cleaning(request):
 def gen_charts(request):
     if request.method=="POST":
         data = json.loads(request.body.decode(encoding='UTF-8'))
-        filters = data['filters']
-        cid = 1
-        chart_data = reports.gen_charts(filters)
-        return HttpResponse(json.dumps(chart_data))
+        tablename = data['tablename']
+        data.pop('tablename')
+        cid=1
+        chart_data = reports.gen_charts(tablename,data,cid)
+        data = {'data':chart_data}
+        return HttpResponse(json.dumps(data), content_type='application/json; encoding=UTF-8')
     else:
         cid=1
-        # data = reports.get_filters(cid)
-        data = {"Age":[1,2,3,4,5,6,7], "Height":[9,8,7,6,5,4,3], "Salary":[10,20,30,40,50,60,70]}
-        return render_to_response("charts.html", {"data":data})
+        data = reports.get_filters(cid)
+        # data = {"Age":[1,2,3,4,5,6,7], "Height":[9,8,7,6,5,4,3], "Salary":[10,20,30,40,50,60,70], "tablename":"company_test_data_iSowbJ8"}
+        tablename = data["tablename"]
+        data.pop("tablename")
+        return render_to_response("charts.html", {"data":data, "tablename":tablename})
 
 def to_charts(request):
     if request.method == 'POST':
@@ -127,3 +131,4 @@ def superadmin_data(request):
 def logout(request):
     auth_logout(request)
     return redirect('/plots/')
+

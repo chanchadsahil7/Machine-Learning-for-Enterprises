@@ -16,6 +16,7 @@
         <title>ML Charts</title>
     </head>
     <script>
+
         function submit()
         {
             var rowCount = $('#select_filters select').length;
@@ -28,6 +29,8 @@
                     data[$('#select_'+i).attr('name')] = value;
                 }
             }
+            console.log($('#tablename').val());
+            data["tablename"] = $('#tablename').val();
             console.log(data);
 
             $.ajax({
@@ -36,7 +39,31 @@
                     data: JSON.stringify(data),
                     success: function(response)
                     {
-                        alert("hello");
+                          google.charts.load('current', {packages: ['corechart', 'bar']});
+                          google.charts.setOnLoadCallback(drawDualX);
+                          function drawDualX(){
+                              var data = google.visualization.arrayToDataTable(response.data);
+                              var materialOptions = {
+                                chart: {
+                                  title: 'Pclass',
+                                  subtitle: 'Pclass versus Sex',
+                                },
+                                hAxis: {
+                                  title: data[0]
+                                },
+                                vAxis: {
+                                  title: data[0]
+                                },
+                                width: 700,
+                                height: 500,
+                                bars: 'horizontal',
+                                isStacked : true,
+
+                              };
+                              var materialChart = new google.visualization.BarChart(document.getElementById('chart_div'));
+                              materialChart.draw(data, materialOptions);
+                          }
+
                     },
                     error: function(jqXHR, exception) {
 
@@ -44,6 +71,10 @@
                     }
                 });
         }
+    </script>
+    <script>
+
+
     </script>
     <body>
         <div id="wrapper">
@@ -114,9 +145,10 @@
                     </select>
                     {% endfor %}
                 </div>
+                <input type="hidden" value="{{ tablename }}" id="tablename">
             </div>
             <div class="row" style="padding-top:30px">
-
+                <div id="chart_div"></div>
             </div>
         </div>
     </div>
