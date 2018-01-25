@@ -169,12 +169,16 @@ def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
 	#populate_filters_table
 	for i in dividing_metrics['filters']:
 		cur.execute("""INSERT INTO filters(name,row_status,cid) VALUES (%s,%s,%s)""",(i,1,cid))
+	conn.commit()
 	for i in dic_metrics_type['non_numerical']:
 		cur.execute("""INSERT INTO filters(name,row_status,cid) VALUES (%s,%s,%s)""",(i,1,cid))
+	conn.commit()
 	for i in dic_metrics_type['numerical_missing']:
 		cur.execute("""INSERT INTO metrics(name,row_status,cid) VALUES (%s,%s,%s)""",(i,1,cid))
+	conn.commit()
 	for i in dic_metrics_type['numerical_non_missing']:
 		cur.execute("""INSERT INTO metrics(name,row_status,cid) VALUES (%s,%s,%s)""",(i,1,cid))
+	conn.commit()
 	table_name=get_file_name(filename,cid)
 	engine = get_engine()
 	dataframe_before.to_sql(con=engine, if_exists='replace', name=table_name,index=False)

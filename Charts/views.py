@@ -46,7 +46,7 @@ def file_upload(request):
         company_name="company"
         myfile = request.FILES['filename']
         fs = FileSystemStorage()
-        filename = fs.save(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name), myfile)
+        filename = fs.save(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name.lower()), myfile)
         uploaded_file_url = fs.url(filename)
         header = reports.get_columns(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name))
         return render(request, 'filter_data.html', {
