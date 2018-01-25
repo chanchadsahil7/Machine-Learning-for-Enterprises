@@ -131,11 +131,11 @@ def get_file_name(filename,cid):
 
 def get_connection():
 	#connection establishment
-	conn = MySQLdb.connect(host="localhost",user="root",password="pass",db="mlcharts")
+	conn = MySQLdb.connect(host="localhost",user="root",password="raviprince57",db="mlcharts")
 	return conn
 
 def get_engine():
-	engine = create_engine("mysql+mysqldb://root:pass"+"@localhost/mlcharts")
+	engine = create_engine("mysql+mysqldb://root:raviprince57"+"@localhost/mlcharts")
 	return engine
 
 def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
@@ -179,6 +179,7 @@ def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
 	for i in dic_metrics_type['numerical_non_missing']:
 		cur.execute("""INSERT INTO metrics(name,row_status,cid) VALUES (%s,%s,%s)""",(i,1,cid))
 	conn.commit()
-	table_name=get_file_name(filename,cid)
+	table_name = get_file_name(filename,cid)
 	engine = get_engine()
 	dataframe_before.to_sql(con=engine, if_exists='replace', name=table_name,index=False)
+	conn.close()

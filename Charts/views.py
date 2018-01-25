@@ -37,10 +37,6 @@ def gen_charts(request):
         filters = data['filters']
         chart_data = reports.gen_charts(filters)
         return HttpResponse(json.dumps(chart_data))
-    else:
-        cid=1
-        data = reports.get_filters(cid)
-        return render_to_response("charts.html", {"data":data})
 
 def to_charts(request):
     if request.method == 'POST':
@@ -59,7 +55,7 @@ def file_upload(request):
         fs = FileSystemStorage()
         filename = fs.save(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name.lower()), myfile)
         uploaded_file_url = fs.url(filename)
-        header = reports.get_columns(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name))
+        header = reports.get_columns(os.path.join(os.path.curdir,"Charts","Data",company_name,myfile.name.lower()))
         return render(request, 'filter_data.html', {
             'header': header,
             'filename':uploaded_file_url,
