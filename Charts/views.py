@@ -36,13 +36,12 @@ def gen_charts(request):
         data = json.loads(request.body.decode(encoding='UTF-8'))
         tablename = data['tablename']
         data.pop('tablename')
-        cid=1
+        cid = reports.get_cid(request.user.email)
         l = reports.gen_charts(tablename,data,cid)
         return HttpResponse(json.dumps(l))
     else:
-        cid=1
+        cid = reports.get_cid(request.user.email)
         data = reports.get_filters(cid)
-        # data = {"Age":[1,2,3,4,5,6,7], "Height":[9,8,7,6,5,4,3], "Salary":[10,20,30,40,50,60,70], "tablename":"company_test_data_iSowbJ8"}
         tablename = data["tablename"]
         data.pop("tablename")
         return render_to_response("charts.html", {"data":data, "tablename":tablename})
@@ -53,7 +52,7 @@ def to_charts(request):
         filename = data['data2']['filename']
         cleaning_metrics = data['data1']
         dividing_metrics = data['data2']
-        cid=1
+        cid = reports.get_cid(request.user.email)
         reports.fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid)
         return HttpResponse()
 

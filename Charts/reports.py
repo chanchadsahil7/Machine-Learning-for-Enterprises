@@ -42,6 +42,15 @@ def get_columns(filename):
 	conn = MySQLdb.connect(host="localhost",user="root",password="pass",db="sample")
 	return conn'''
 
+def get_cid(email):
+	conn=get_connection()
+	cur=conn.cursor()
+	query="select cid from admin where email="+ "'" + str(email) + "'"
+	cur.execute(query)
+	t=cur.fetchall()
+	cid=t[0][0]
+	return cid
+
 def get_numerical_metrics(filename,metrics):
 	'''conn=get_connection()
 	cur=conn.cursor()'''
@@ -237,7 +246,7 @@ def get_bar_chart(df):
 def gen_charts(tablename,data,cid):
 	conn = MySQLdb.connect(host="localhost", user="root", password="pass", db="mlcharts")
 	cur = conn.cursor()
-	dataframe_before = pd.read_sql('select name from metrics where cid=1', conn)
+	dataframe_before = pd.read_sql('select name from metrics where cid=%s'%(int(cid)), conn)
 	metrics = list(set(list(dataframe_before['name'])))
 	query = 'select '+ ",".join(metrics) + ' from ' + tablename
 	l = []
@@ -264,13 +273,13 @@ def get_filters(cid):
 	cur = conn.cursor()
 
 	## for fetching the filters from filters table having cid == cid ##
-	query = """SELECT NAME FROM filters WHERE cid = """ + str(1)
+	query = "SELECT NAME FROM filters WHERE cid = %s"%(int(cid))
 	cur.execute(query)
 	filters = [name[0] for name in cur.fetchall()]
 	filters = ",".join(filters)
 
 	## for fetching the company name from company table having cid == cid ##
-	query = """SELECT name FROM company WHERE cid = """ + str(cid)
+	query = "SELECT name FROM company WHERE cid = %s" %(int(cid))
 	cur.execute(query)
 	company_name = cur.fetchall()[0][0]
 
