@@ -7,17 +7,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from Charts import reports
 import json
 import os
-import pandas as pd
-
-
-# from django.template.context import RequestContext
 data = {}
 
 def login(request):
-    # context = RequestContext(request, {
-    #     'request': request, 'user': request.user})
-    # return render_to_response('login.html', context_instance=context)
-
     return render(request, 'login.html')
 
 def dashboard(request):
