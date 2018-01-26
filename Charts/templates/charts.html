@@ -40,12 +40,12 @@
                     success: function(response)
                     {
                          data = JSON.parse(response);
-                         $("#chart_div").empty();
-                         $("#chart_div").append(data[0]);
-                         $("#chart_div").append(data[1]);
-                         $("#chart_div").append(data[2]);
-                         $("#chart_div").append(data[3]);
-                         $("#chart_div").append(data[4]);
+                         $("#chart_boxplot").empty();
+                         $("#chart_boxplot").append(data[0]);
+                         $("#chart_distplot").append(data[1]);
+                         $("#chart_scatterplot").append(data[2]);
+                         $("#chart_barplot").append(data[3]);
+                         $("#chart_densityplot").append(data[4]);
                     },
                     error: function(jqXHR, exception) {
 
@@ -55,12 +55,25 @@
         }
     </script>
     <script>
-
-
+    function clicked()
+    {
+        $( "button" ).click(function() {
+            if($(this).attr('id') == 'simple_charts_btn')
+            {
+                $("#simple_charts").show();
+                $("#advanced_charts").hide();
+            }
+            else if($(this).attr('id') == 'advanced_charts_btn')
+            {
+                $("#simple_charts").hide();
+                $("#advanced_charts").show();
+            }
+        });
+    }
     </script>
     <body>
         <div id="wrapper">
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -115,25 +128,211 @@
                 </div>
             </div>
         </nav>
-        <div id="page-wrapper">
-            <div class="row" style="padding-top:30px">
-                <div id="select_filters">
-                    {% for key, value in data.items %}
-                    <select name="{{key}}" onchange="return submit();" id="select_{{forloop.counter}}">
-                        <option selected>All</option>>
-                        {% for i in value %}
-                        <option>{{i}}</option>
-                        {% endfor %}
-                    </select>
-                    {% endfor %}
+            <div id="page-wrapper">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Charts</h1>
+                    </div>
                 </div>
-                <input type="hidden" value="{{ tablename }}" id="tablename">
-            </div>
-            <div class="row" style="padding-top:30px">
-                <div id="chart_div"></div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-comments fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">26</div>
+                                        <div>New Comments!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-tasks fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">12</div>
+                                        <div>New Tasks!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-yellow">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-shopping-cart fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">124</div>
+                                        <div>New Orders!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-red">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-support fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">13</div>
+                                        <div>Support Tickets!</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">View Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding-top:30px">
+                    <div class="table-responsive col-md-12">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    {% for key, value in data.items %}
+                                    <th>
+                                        <center>
+                                            {{key}}
+                                        </center>
+                                    </th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {% for key, value in data.items %}
+                                    <td id="select_filters">
+                                        <select name="{{key}}" onchange="return submit();" id="select_{{forloop.counter}}">
+                                            <option selected>All</option>>
+                                            {% for i in value %}
+                                            <option>{{i}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <input type="hidden" value="{{ tablename }}" id="tablename">
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <button type="button" id="simple_charts_btn" onclick="return clicked();" class="btn btn-default">Simple Charts</button>
+                                <button type="button" id="advanced_charts_btn" onclick="return clicked();" class="btn btn-default">Advanced Charts</button>
+                            </div>
+                            <div class="panel-body" id="simple_charts">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <i class="fa fa-bar-chart-o fa-fw"></i> Box Plot Chart
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="chart_boxplot"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <i class="fa fa-bar-chart-o fa-fw"></i> Scatter Plot
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="chart_scatterplot"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="chart_barplot"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body" style="display:none" id="advanced_charts">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <i class="fa fa-bar-chart-o fa-fw"></i> Distribution Chart
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="chart_distplot"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <i class="fa fa-bar-chart-o fa-fw"></i> 2D Density Chart
+                                            </div>
+                                            <div class="panel-body">
+                                                <div id="chart_densityplot"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
     <script src="{% static 'js/main.js'%}"></script>
     <script src="{% static 'js/jquery.min.js'%}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js'%}"></script>
