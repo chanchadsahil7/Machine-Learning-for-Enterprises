@@ -3,6 +3,9 @@ import pandas as pd
 import os
 import json
 from sqlalchemy import create_engine
+import plotly.offline as py
+import plotly.graph_objs as go
+import plotly.figure_factory as ff
 
 def filter_data(company_id):
 	json_obj = {}
@@ -185,6 +188,37 @@ def fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid):
 	dataframe_before.to_sql(con=engine, if_exists='replace', name=table_name,index=False)
 	conn.close()
 
+def get_box_chart(df):
+	header = df.columns
+	data = []
+	for i in header:
+		trace_name = i + '_'
+		exec("%s = go.Box(y=%s,name='%s')"%(trace_name,df[i].tolist(),i))
+		exec("data.append(%s)"%trace_name)
+	layout = go.Layout(title="Box Plot Chart")
+	figure = go.Figure(data=data, layout=layout)
+	return py.plot(figure, auto_open=False, output_type='div')
+
+
+def get_dist_plot(df):
+	group_labels = list(df.columns)
+	data=[]
+	for i in group_labels:
+		data.append(df[i].tolist())
+	fig = ff.create_distplot(data,group_labels)
+	return py.plot(fig, auto_open=False, output_type='div')
+
+def get_scatter_plot(df):
+	header = df.columns
+	data = []
+	for i in header:
+		trace_name = i + '_'
+		exec ("%s = go.Scatter(y=%s,name='%s',mode='markers')" % (trace_name, df[i].tolist(), i))
+		exec ("data.append(%s)" % trace_name)
+	layout = go.Layout(title="Box Plot Chart")
+	figure = go.Figure(data=data, layout=layout)
+	return py.plot(figure, auto_open=False, output_type='div')
+
 def gen_charts(tablename,data,cid):
 	conn = MySQLdb.connect(host="localhost", user="root", password="pass", db="mlcharts")
 	cur = conn.cursor()
@@ -197,12 +231,14 @@ def gen_charts(tablename,data,cid):
 	l.append(s)
 	query = '{} WHERE {}'.format(query, ' AND '.join(l))
 	dataframe_before = pd.read_sql(query, conn)
-	json_ex = dataframe_before.to_json(orient='split')
-	json_obj = json.loads(json_ex)
-	datatable = json_obj['data']
-	cols = json_obj['columns']
-	datatable.insert(0, cols)
-	return datatable
+	div = get_box_chart(dataframe_before)
+	div1 = get_dist_plot(dataframe_before)
+	div2 = get_scatter_plot(dataframe_before)
+	l = []
+	l.append(div)
+	l.append(div1)
+	l.append(div2)
+	return l
 
 def get_filters(cid):
 	conn = get_connection()

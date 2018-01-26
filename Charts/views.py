@@ -37,9 +37,8 @@ def gen_charts(request):
         tablename = data['tablename']
         data.pop('tablename')
         cid=1
-        chart_data = reports.gen_charts(tablename,data,cid)
-        data = {'data':chart_data}
-        return HttpResponse(json.dumps(data), content_type='application/json; encoding=UTF-8')
+        l = reports.gen_charts(tablename,data,cid)
+        return HttpResponse(json.dumps(l))
     else:
         cid=1
         data = reports.get_filters(cid)

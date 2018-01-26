@@ -39,31 +39,11 @@
                     data: JSON.stringify(data),
                     success: function(response)
                     {
-                          google.charts.load('current', {packages: ['corechart', 'bar']});
-                          google.charts.setOnLoadCallback(drawDualX);
-                          function drawDualX(){
-                              var data = google.visualization.arrayToDataTable(response.data);
-                              var materialOptions = {
-                                chart: {
-                                  title: 'Pclass',
-                                  subtitle: 'Pclass versus Sex',
-                                },
-                                hAxis: {
-                                  title: data[0]
-                                },
-                                vAxis: {
-                                  title: data[0]
-                                },
-                                width: 700,
-                                height: 500,
-                                bars: 'horizontal',
-                                isStacked : true,
-
-                              };
-                              var materialChart = new google.visualization.BarChart(document.getElementById('chart_div'));
-                              materialChart.draw(data, materialOptions);
-                          }
-
+                         data = JSON.parse(response);
+                         $("#chart_div").empty();
+                         $("#chart_div").append(data[0]);
+                         $("#chart_div").append(data[1]);
+                         $("#chart_div").append(data[2]);
                     },
                     error: function(jqXHR, exception) {
 
