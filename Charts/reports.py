@@ -215,7 +215,22 @@ def get_scatter_plot(df):
 		trace_name = i + '_'
 		exec ("%s = go.Scatter(y=%s,name='%s',mode='markers')" % (trace_name, df[i].tolist(), i))
 		exec ("data.append(%s)" % trace_name)
-	layout = go.Layout(title="Box Plot Chart")
+	layout = go.Layout(title="Scatter Chart")
+	figure = go.Figure(data=data, layout=layout)
+	return py.plot(figure, auto_open=False, output_type='div')
+
+def get_density_chart(df):
+	fig = ff.create_2d_density(df['Age'],df['HourlyRate'])
+	return py.plot(fig, auto_open=False, output_type='div')
+
+def get_bar_chart(df):
+	header = df.columns
+	data = []
+	for i in header:
+		trace_name = i + '_'
+		exec ("%s = go.Bar(y=%s,name='%s')" % (trace_name, df[i].tolist(), i))
+		exec ("data.append(%s)" % trace_name)
+	layout = go.Layout(title="Bar Chart",barmode='stack')
 	figure = go.Figure(data=data, layout=layout)
 	return py.plot(figure, auto_open=False, output_type='div')
 
@@ -234,10 +249,14 @@ def gen_charts(tablename,data,cid):
 	div = get_box_chart(dataframe_before)
 	div1 = get_dist_plot(dataframe_before)
 	div2 = get_scatter_plot(dataframe_before)
+	div3 = get_bar_chart(dataframe_before)
+	div4 = get_density_chart(dataframe_before)
 	l = []
 	l.append(div)
 	l.append(div1)
 	l.append(div2)
+	l.append(div3)
+	l.append(div4)
 	return l
 
 def get_filters(cid):
