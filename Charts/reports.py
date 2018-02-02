@@ -18,6 +18,21 @@ def get_columns(filename):
     filedata = pd.read_csv(filename)
     return list(filedata.columns.values)
 
+def get_users(email):
+    conn = get_connection()
+    cur = conn.cursor()
+    query = "select cid from admin where email="+ "'" + str(email) + "'"
+    cur.execute(query)
+    t = cur.fetchall()
+    cid = t[0][0]
+    query = "select * from users where cid='" + str(cid) +"'"
+    cur.execute(query)
+    t = cur.fetchall()
+    users_list = list(t)
+    return users_list
+
+
+
 def get_cid(email):
     ## retrieves and returns the company id using the email ##
     conn = get_connection()
@@ -27,6 +42,13 @@ def get_cid(email):
     t = cur.fetchall()
     cid = t[0][0]
     return cid
+
+
+def add_user(name, email, admin_email):
+    cid = get_cid(email)
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""INSERT INTO users(name,email,cid) VALUES (%s,%s,%s)""", (name, email, cid))
 
 def check_is_admin(email):
     conn = get_connection()

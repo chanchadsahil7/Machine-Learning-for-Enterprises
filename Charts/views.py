@@ -53,6 +53,15 @@ def gen_charts(request):
         return render_to_response("charts.html", {"data":data, "tablename":tablename, 'user':request.user.get_full_name})
 
 @login_required(login_url="/plots/")
+def users(request):
+    if request.method == "POST":
+        name = request.POST['user_name']
+        email = request.POST['user_email']
+        reports.add_user(name,email,request.user.email)
+    users = reports.get_users(request.user.email)
+    return render_to_response("users.html",{'users':users})
+
+@login_required(login_url="/plots/")
 def to_charts(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode(encoding='UTF-8'))

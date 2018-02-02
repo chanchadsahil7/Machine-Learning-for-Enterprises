@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^data_cleaning/$', views.data_cleaning, name='data_cleaning'),
     url(r'^to_charts/$', views.to_charts, name='to_charts'),
     url(r'^gen_charts/$', views.gen_charts, name='gen_charts'),
+    url(r'^users/$', views.users, name='users'),
 ]
 
 
