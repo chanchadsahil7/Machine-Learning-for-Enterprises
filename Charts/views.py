@@ -15,9 +15,11 @@ def is_admin(email):
 def login(request):
     return render(request, 'login.html')
 
+@login_required(login_url="/plots/")
 def dashboard(request):
     return render_to_response('index.html', {})
 
+@login_required(login_url="/plots/")
 def data_cleaning(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode(encoding='UTF-8'))
@@ -26,14 +28,16 @@ def data_cleaning(request):
         metrics_data = reports.get_numerical_metrics(filename,metrics)
         return HttpResponse(json.dumps(metrics_data))
 
-@login_required(login_url='/plots/')
+@login_required(login_url="/plots/")
 def home(request):
     if is_admin(request.user.email):
-        return render_to_response('home.html',{'user':request.user.get_full_name})
+        print("hello")
+        return render_to_response('index.html',{'user':request.user.get_full_name})
     else:
         logout(request)
         return render_to_response('error_login.html',{})
 
+@login_required(login_url="/plots/")
 def gen_charts(request):
     if request.method=="POST":
         data = json.loads(request.body.decode(encoding='UTF-8'))
@@ -49,6 +53,7 @@ def gen_charts(request):
         data.pop("tablename")
         return render_to_response("charts.html", {"data":data, "tablename":tablename})
 
+@login_required(login_url="/plots/")
 def to_charts(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode(encoding='UTF-8'))
@@ -59,6 +64,7 @@ def to_charts(request):
         reports.fill_missing_values(filename,cleaning_metrics,dividing_metrics,cid)
         return HttpResponse()
 
+@login_required(login_url="/plots/")
 def file_upload(request):
     if request.method == 'POST' and request.FILES['filename']:
         company_name="company"
@@ -73,14 +79,6 @@ def file_upload(request):
         })
     return render(request, 'upload.html')
 
-@login_required(login_url='/plots/')
-def home(request):
-    if request.user.email.split('@')[1]=="solivarlabs.com":
-        return render_to_response('home.html',{'user':request.user.get_full_name})
-    else:
-        print(request.user.email.split('@')[1])
-        logout(request)
-        return render_to_response('error_login.html',{})
 
 @login_required(login_url="/plots/")
 def super_user(request):
@@ -122,6 +120,7 @@ def super_user(request):
             return JsonResponse(data)
     return render_to_response('superuser.html',{'companies':companies})
 
+@login_required(login_url="/plots/")
 def superadmin_data(request):
     company_name = request.GET.get("company",None)
     data_filtered = reports.filter_data(company_name)
@@ -129,6 +128,7 @@ def superadmin_data(request):
     response = JsonResponse({'data':data_filtered})
     return response
 
+@login_required(login_url="/plots/")
 def logout(request):
     auth_logout(request)
     return redirect('/plots/')

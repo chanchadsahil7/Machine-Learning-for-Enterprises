@@ -10,7 +10,7 @@ import plotly.figure_factory as ff
 
 ## change these values according to your credentials for the database ##
 username = "root"
-pwd = "raviprince57"
+pwd = "pass"
 dbname = "mlcharts"
 
 def get_columns(filename):
