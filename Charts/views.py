@@ -9,6 +9,9 @@ import json
 import os
 data = {}
 
+def is_admin(email):
+    return reports.check_is_admin(email)
+
 def login(request):
     return render(request, 'login.html')
 
@@ -22,6 +25,14 @@ def data_cleaning(request):
         metrics = data['metrics']
         metrics_data = reports.get_numerical_metrics(filename,metrics)
         return HttpResponse(json.dumps(metrics_data))
+
+@login_required(login_url='/plots/')
+def home(request):
+    if is_admin(request.user.email):
+        return render_to_response('home.html',{'user':request.user.get_full_name})
+    else:
+        logout(request)
+        return render_to_response('error_login.html',{})
 
 def gen_charts(request):
     if request.method=="POST":

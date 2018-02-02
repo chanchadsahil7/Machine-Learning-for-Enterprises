@@ -28,6 +28,17 @@ def get_cid(email):
     cid = t[0][0]
     return cid
 
+def check_is_admin(email):
+    conn = get_connection()
+    cur = conn.cursor()
+    query = "select cid from admin where email=" + "'" + str(email) + "'"
+    cur.execute(query)
+    t = cur.fetchall()
+    if t:
+        cid = t[0][0]
+        return True
+    return False
+
 def get_numerical_metrics(filename,metrics):
     #getting type of metrics
     file_dt = pd.read_csv(filename)
