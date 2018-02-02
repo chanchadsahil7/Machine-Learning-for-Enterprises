@@ -17,7 +17,7 @@ def login(request):
 
 @login_required(login_url="/plots/")
 def dashboard(request):
-    return render_to_response('index.html', {})
+    return render_to_response('index.html', {'user':request.user.get_full_name})
 
 @login_required(login_url="/plots/")
 def data_cleaning(request):
@@ -31,7 +31,6 @@ def data_cleaning(request):
 @login_required(login_url="/plots/")
 def home(request):
     if is_admin(request.user.email):
-        print("hello")
         return render_to_response('index.html',{'user':request.user.get_full_name})
     else:
         logout(request)
@@ -51,7 +50,7 @@ def gen_charts(request):
         data = reports.get_filters(cid)
         tablename = data["tablename"]
         data.pop("tablename")
-        return render_to_response("charts.html", {"data":data, "tablename":tablename})
+        return render_to_response("charts.html", {"data":data, "tablename":tablename, 'user':request.user.get_full_name})
 
 @login_required(login_url="/plots/")
 def to_charts(request):
@@ -66,6 +65,7 @@ def to_charts(request):
 
 @login_required(login_url="/plots/")
 def file_upload(request):
+    name = request.user.get_full_name
     if request.method == 'POST' and request.FILES['filename']:
         company_name="company"
         myfile = request.FILES['filename']
@@ -76,12 +76,13 @@ def file_upload(request):
         return render(request, 'filter_data.html', {
             'header': header,
             'filename':uploaded_file_url,
+            'user': name,
         })
     return render(request, 'upload.html')
 
 
 @login_required(login_url="/plots/")
-def super_user(request):
+def tables(request):
     global data
     companies={
         1:['a','a.jpg'],
@@ -118,14 +119,14 @@ def super_user(request):
                     print(users[i])
             data = {'admins':admins,'users':users}
             return JsonResponse(data)
-    return render_to_response('superuser.html',{'companies':companies})
+    return render_to_response('tables.html',{'companies':companies, 'user':request.user.get_full_name})
 
 @login_required(login_url="/plots/")
 def superadmin_data(request):
     company_name = request.GET.get("company",None)
     data_filtered = reports.filter_data(company_name)
     print(data_filtered)
-    response = JsonResponse({'data':data_filtered})
+    response = JsonResponse({'data':data_filtered, 'user':request.user.get_full_name})
     return response
 
 @login_required(login_url="/plots/")
