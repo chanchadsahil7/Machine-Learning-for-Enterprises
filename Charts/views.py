@@ -53,6 +53,13 @@ def gen_charts(request):
         return render_to_response("charts.html", {"data":data, "tablename":tablename, 'user':request.user.get_full_name})
 
 @login_required(login_url="/plots/")
+def remove_user(request):
+    data = json.loads(request.body.decode(encoding='UTF-8'))
+    print(data)
+    reports.remove_user(data['uid'])
+    return HttpResponse("hai")
+
+@login_required(login_url="/plots/")
 def users(request):
     if request.method == "POST":
         name = request.POST['user_name']

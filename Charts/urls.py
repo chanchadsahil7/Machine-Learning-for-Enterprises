@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^to_charts/$', views.to_charts, name='to_charts'),
     url(r'^gen_charts/$', views.gen_charts, name='gen_charts'),
     url(r'^users/$', views.users, name='users'),
+    url(r'^remove_user/$', views.remove_user, name='remove_user'),
 ]
 
 

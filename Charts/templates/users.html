@@ -16,6 +16,18 @@
 
         <title>ML Charts</title>
     </head>
+    <style>
+        #myInput {
+            background-image: url('/css/searchicon.png');
+            background-position: 10px 12px;
+            background-repeat: no-repeat;
+            width: 100%;
+            font-size: 16px;
+            padding: 12px 20px 12px 40px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+        }
+    </style>
 
     <body>
         <div id="wrapper">
@@ -52,7 +64,10 @@
                             <a href="{% url 'gen_charts' %}"><i class="fa fa-bar-chart-o fa-fw"></i> Charts</a>
                         </li>
                         <li>
-                            <a href="{% url 'users' %}"><i class="fa fa-table fa-fw"></i> Tables</a>
+                            <a href="{% url 'tables' %}"><i class="fa fa-table fa-fw"></i> Tables</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'users' %}"><i class="fa fa-table fa-fw"></i> Add Users</a>
                         </li>
                     </ul>
                 </div>
@@ -66,39 +81,37 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="well well-sm">
-                                    <form class="form-horizontal" method="post">
-                                        <fieldset>
-                                            <legend class="text-center header">Contact us</legend>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <div class="well well-sm">
+                            <form class="form-horizontal" method="post">
+                                <fieldset>
+                                    <legend class="text-center header">Add User</legend>
 
-                                            <div class="form-group">
-                                                <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
-                                                <div class="col-md-8">
-                                                    <input id="name" name="user_name" type="text" placeholder="Name" class="form-control">
-                                                </div>
-                                            </div>
+                                    <div class="form-group">
+                                        <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+                                        <div class="col-md-8">
+                                            <input id="name" required name="user_name" type="text" placeholder="Name" class="form-control">
+                                        </div>
+                                    </div>
 
-                                            <div class="form-group">
-                                                <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>
-                                                <div class="col-md-8">
-                                                    <input id="email" name="user_email" type="text" placeholder="Email Address" class="form-control">
-                                                </div>
-                                            </div>
+                                    <div class="form-group">
+                                        <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>
+                                        <div class="col-md-8">
+                                            <input id="email" required name="user_email" type="email" placeholder="Email Address" class="form-control">
+                                        </div>
+                                    </div>
 
-                                            <div class="form-group">
-                                                <div class="col-md-12 text-center">
-                                                    <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </div>
-                            </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12 text-center">
+                                            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
                         </div>
                     </div>
+                    <div class="col-md-3"></div>
                 </div>
             </div>
             <div class="row">
@@ -108,7 +121,30 @@
                     </div>
                 </div>
                 <div class="row">
-                    {{users|safe}}
+                    <div class="col-lg-6">
+                        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+                    </div>
+                </div>
+                <div class="row col-md-6">
+                    <div class="table-responsive">
+                        <table id="users_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th><center>Name</center></th>
+                                    <th><center>Email</center></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{user.1}}</td>
+                                    <td>{{user.2}}</td>
+                                    <td><button id="{{user.0}}" onclick="return remove_user(this.id);" class="btn btn-primary submit">Remove</button></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,6 +158,48 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+    <script>
+        function remove_user(uid)
+        {
+            var data={};
+            data.uid = uid;
+            $.ajax
+            ({
+                type: "POST",
+                url: '/plots/remove_user/',
+                data: JSON.stringify(data),
+                success: function(response)
+                {
+                    $("#"+uid).closest('tr').remove();
+                },
+                error: function(jqXHR, exception) {
+
+                    console.log(exception);
+                    }
+            });
+        }
+    </script>
+    <script>
+        function myFunction()
+        {
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("myInput");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("users_table");
+          tr = table.getElementsByTagName("tr");
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+              if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+    </script>
     </body>
 
 </html>

@@ -35,6 +35,7 @@ def get_users(email):
         return []
 
 
+
 def get_cid(email):
     ## retrieves and returns the company id using the email ##
     conn = get_connection()
@@ -51,7 +52,18 @@ def add_user(name, email, admin_email):
     cid = get_cid(admin_email)
     conn = get_connection()
     cur = conn.cursor()
-    var = cur.execute("""INSERT INTO users(name,email,cid) VALUES (%s,%s,%s)""", (name, email, cid))
+    query = "select * from users where email=" + "'" + str(email) + "' and cid=" + str(cid)
+    cur.execute(query)
+    t = cur.fetchall()
+    if not t:
+        var = cur.execute("""INSERT INTO users(name,email,cid) VALUES (%s,%s,%s)""", (name, email, cid))
+        conn.commit()
+
+def remove_user(uid):
+    conn = get_connection()
+    cur = conn.cursor()
+    query = "Delete from users where uid=" + uid
+    cur.execute(query)
     conn.commit()
 
 def check_is_admin(email):
