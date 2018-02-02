@@ -81,7 +81,7 @@ def file_upload(request):
 
 
 @login_required(login_url="/plots/")
-def super_user(request):
+def tables(request):
     global data
     companies={
         1:['a','a.jpg'],
@@ -118,7 +118,7 @@ def super_user(request):
                     print(users[i])
             data = {'admins':admins,'users':users}
             return JsonResponse(data)
-    return render_to_response('superuser.html',{'companies':companies})
+    return render_to_response('tables.html',{'companies':companies})
 
 @login_required(login_url="/plots/")
 def superadmin_data(request):
